@@ -29,16 +29,27 @@ export function MobileLayout() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('about');
 
-  const scrollTo = (id: string) => {
+ const scrollTo = (id: string) => {
     setActiveSection(id);
     setMenuOpen(false);
-    
-    // Smooth scroll is much more reliable with standard DOM methods 
-    // when combined with CSS scroll-margin-top (added to the sections below)
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+
+    // 1. Wait a tiny bit (150ms) for the menu to collapse so the DOM stabilizes.
+    setTimeout(() => {
+      const element = document.getElementById(id);
+      if (element) {
+        // 2. Calculate the exact distance from the top of the page, 
+        // minus 80 pixels to account for your sticky header.
+        const headerOffset = 80; 
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+        // 3. Command the window to scroll to that exact pixel.
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 150);
   };
 
   return (

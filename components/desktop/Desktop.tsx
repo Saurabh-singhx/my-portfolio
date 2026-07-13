@@ -12,6 +12,7 @@ import { ResumeWindow } from '../windows/ResumeWindow';
 import { useWindowManager } from '@/context/WindowManagerContext';
 import { ParticlesBackground } from './ParticlesBackground';
 import { FileText } from 'lucide-react';
+import Lightfall from './Lightfall';
 
 export function Desktop() {
   const { windows, openWindow } = useWindowManager();
@@ -20,19 +21,38 @@ export function Desktop() {
 
   return (
     <div className="fixed inset-0 bg-[#0d1117] ">
-      <ParticlesBackground />
-      
+      {/* <ParticlesBackground /> */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <Lightfall
+          colors={['#A6C8FF', '#5227FF', '#FF9FFC']}
+          backgroundColor="#0A29FF"
+          speed={0.5}
+          streakCount={2}
+          streakWidth={1}
+          streakLength={1}
+          glow={1}
+          density={0.6}
+          twinkle={1}
+          zoom={3}
+          backgroundGlow={0.5}
+          opacity={1}
+          mouseInteraction={false}
+          mouseStrength={0.5}
+          mouseRadius={1}
+        />
+      </div>
+
       <Menubar />
-      
+
       {/* FIXED: Added relative positioning, removed pb-20, overflow visible */}
-      <div 
-        className="absolute inset-0 pt-10 " 
+      <div
+        className="absolute inset-0 pt-10 "
         style={{ position: 'relative', overflow: 'visible' }}
       >
         {/* Desktop Icons */}
         <div className="absolute top-10 left-4 flex flex-col gap-4 z-0">
-          <DesktopIcon 
-            label="resume.pdf" 
+          <DesktopIcon
+            label="resume.pdf"
             onClick={openResume}
           />
         </div>
@@ -40,7 +60,7 @@ export function Desktop() {
         {/* Windows */}
         {windows.terminal.isOpen && (
           <Window id="terminal" title="Terminal">
-            <TerminalWindow/>
+            <TerminalWindow />
           </Window>
         )}
         {windows.projects.isOpen && (
