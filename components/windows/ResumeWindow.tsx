@@ -5,7 +5,7 @@ import { resumeData } from '@/lib/resumeData';
 
 export function ResumeWindow() {
   return (
-    <div className="h-full bg-[#161b22] overflow-auto">
+    <div className="h-full bg-[#161b22] overflow-auto ">
       {/* Header */}
       <div className="bg-[#1c2333] p-6 border-b border-white/[0.08]">
         <div className="flex justify-between items-start">

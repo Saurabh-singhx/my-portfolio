@@ -16,7 +16,7 @@ export function ProjectsWindow() {
   const [selectedProject, setSelectedProject] = useState<Project>(projects[0]);
 
   return (
-    <div className="h-full flex bg-[#161b22]">
+    <div className="h-full flex bg-[#161b22] ">
       {/* Sidebar */}
       <div className="w-[200px] bg-[#1c2333] border-r border-white/[0.08] overflow-auto flex-shrink-0">
         {projects.map((project) => (

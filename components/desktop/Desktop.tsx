@@ -19,18 +19,18 @@ export function Desktop() {
   const openResume = useCallback(() => openWindow('resume'), [openWindow]);
 
   return (
-    <div className="fixed inset-0 bg-[#0d1117]">
+    <div className="fixed inset-0 bg-[#0d1117] ">
       <ParticlesBackground />
       
       <Menubar />
       
       {/* FIXED: Added relative positioning, removed pb-20, overflow visible */}
       <div 
-        className="absolute inset-0 pt-7" 
+        className="absolute inset-0 pt-10 " 
         style={{ position: 'relative', overflow: 'visible' }}
       >
         {/* Desktop Icons */}
-        <div className="absolute top-4 left-4 flex flex-col gap-4 z-0">
+        <div className="absolute top-10 left-4 flex flex-col gap-4 z-0">
           <DesktopIcon 
             label="resume.pdf" 
             onClick={openResume}
@@ -40,7 +40,7 @@ export function Desktop() {
         {/* Windows */}
         {windows.terminal.isOpen && (
           <Window id="terminal" title="Terminal">
-            <TerminalWindow />
+            <TerminalWindow/>
           </Window>
         )}
         {windows.projects.isOpen && (

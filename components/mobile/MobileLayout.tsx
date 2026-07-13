@@ -32,54 +32,72 @@ export function MobileLayout() {
   const scrollTo = (id: string) => {
     setActiveSection(id);
     setMenuOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    
+    // Smooth scroll is much more reliable with standard DOM methods 
+    // when combined with CSS scroll-margin-top (added to the sections below)
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
     <div className="min-h-screen bg-[#0d1117] text-[#e6edf3] font-sans">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-[#0d1117]/90 backdrop-blur-md border-b border-white/[0.08]">
-        <div className="flex items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-2">
-            <Terminal size={18} className="text-[#00ff41]" />
-            <span className="font-mono text-sm">Saurabh Kumar</span>
+      
+      {/* FIX 1: Wrap BOTH the Header and the Menu in a single sticky container. 
+        This ensures the menu always drops down directly below the header, 
+        no matter how far down the page you have scrolled.
+      */}
+      <div className="sticky top-0 z-50">
+        <header className="bg-[#0d1117]/90 backdrop-blur-md border-b border-white/[0.08]">
+          <div className="flex items-center justify-between px-4 py-3">
+            <div className="flex items-center gap-2">
+              <Terminal size={18} className="text-[#00ff41]" />
+              <span className="font-mono text-sm">Saurabh Kumar</span>
+            </div>
+            <button onClick={() => setMenuOpen(!menuOpen)} className="p-1">
+              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
-          <button onClick={() => setMenuOpen(!menuOpen)} className="p-1">
-            {menuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-      </header>
+        </header>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="bg-[#161b22] border-b border-white/[0.08] overflow-hidden"
-          >
-            <nav className="px-4 py-2 space-y-1">
-              {['about', 'projects', 'skills', 'contact', 'resume'].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => scrollTo(item)}
-                  className={`block w-full text-left px-3 py-2 rounded font-mono text-sm capitalize ${
-                    activeSection === item ? 'bg-[#00d2ff]/10 text-[#00d2ff]' : 'text-[#8b949e]'
-                  }`}
-                >
-                  {item}
-                </button>
-              ))}
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="bg-[#161b22] border-b border-white/[0.08] overflow-hidden absolute w-full shadow-lg"
+            >
+              <nav className="px-4 py-2 space-y-1">
+                {['about', 'projects', 'skills', 'contact', 'resume'].map((item) => (
+                  <button
+                    key={item}
+                    onClick={() => scrollTo(item)}
+                    className={`block w-full text-left px-3 py-2 rounded font-mono text-sm capitalize ${
+                      activeSection === item ? 'bg-[#00d2ff]/10 text-[#00d2ff]' : 'text-[#8b949e]'
+                    }`}
+                  >
+                    {item}
+                  </button>
+                ))}
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       {/* Content */}
       <main className="px-4 py-6 space-y-12">
+        
+        {/* FIX 2: Add `scroll-mt-24` (scroll-margin-top) to all <section> tags.
+          This prevents the sticky header from overlapping the section titles 
+          when `scrollIntoView` runs.
+        */}
+        
         {/* About */}
-        <section id="about">
+        <section id="about" className="scroll-mt-24">
           <h2 className="text-xl font-mono text-[#00d2ff] mb-4">whoami</h2>
           <div className="bg-[#161b22] border border-white/[0.08] rounded-lg p-4 space-y-3">
             <p className="text-sm leading-relaxed">
@@ -102,7 +120,7 @@ export function MobileLayout() {
         </section>
 
         {/* Projects */}
-        <section id="projects">
+        <section id="projects" className="scroll-mt-24">
           <h2 className="text-xl font-mono text-[#00d2ff] mb-4">Projects</h2>
           <div className="space-y-4">
             {projects.map((project) => (
@@ -135,7 +153,7 @@ export function MobileLayout() {
         </section>
 
         {/* Skills */}
-        <section id="skills">
+        <section id="skills" className="scroll-mt-24">
           <h2 className="text-xl font-mono text-[#00d2ff] mb-4">Skills</h2>
           <div className="grid grid-cols-2 gap-3 mb-6">
             {skillCategories.map((category) => (
@@ -167,13 +185,13 @@ export function MobileLayout() {
         </section>
 
         {/* Contact */}
-        <section id="contact">
+        <section id="contact" className="scroll-mt-24">
           <h2 className="text-xl font-mono text-[#00d2ff] mb-4">Contact</h2>
           <ContactForm />
         </section>
 
         {/* Resume */}
-        <section id="resume">
+        <section id="resume" className="scroll-mt-24">
           <h2 className="text-xl font-mono text-[#00d2ff] mb-4">Resume</h2>
           <div className="bg-[#161b22] border border-white/[0.08] rounded-lg p-4 space-y-4">
             <div>

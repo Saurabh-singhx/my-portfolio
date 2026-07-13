@@ -80,6 +80,18 @@ export function WindowManagerProvider({ children }: { children: React.ReactNode 
     setWindows((prev) => {
       const newZIndex = topZIndexRef.current + 1;
       topZIndexRef.current = newZIndex;
+
+      // 1. Get screen dimensions safely
+      const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 1024;
+      const screenHeight = typeof window !== 'undefined' ? window.innerHeight : 768;
+
+      // 2. Get the specific size of the window being opened
+      const windowWidth = prev[id].size.width;
+      const windowHeight = prev[id].size.height;
+
+      // 3. Create centerX and centerY right here
+      const centerX = Math.max(0, (screenWidth - windowWidth) / 2);
+      const centerY = Math.max(0, (screenHeight - windowHeight) / 2 - 20);
       return {
         ...prev,
         [id]: {
@@ -87,6 +99,7 @@ export function WindowManagerProvider({ children }: { children: React.ReactNode 
           isOpen: true,
           isMinimized: false,
           zIndex: newZIndex,
+          position: { x: centerX, y: centerY },
         },
       };
     });

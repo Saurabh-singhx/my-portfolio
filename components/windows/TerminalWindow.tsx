@@ -92,7 +92,7 @@ export function TerminalWindow() {
 
   return (
     <div 
-      className="h-full bg-[#0a0a0a] p-4 font-mono text-sm flex flex-col"
+      className="h-full bg-[#0a0a0a] p-4 font-mono text-sm flex flex-col "
       onClick={() => inputRef.current?.focus()}
     >
       <div ref={scrollRef} className="flex-1 overflow-auto space-y-1">

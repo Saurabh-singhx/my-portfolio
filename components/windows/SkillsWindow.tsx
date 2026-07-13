@@ -8,7 +8,7 @@ export function SkillsWindow() {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <div className="h-full bg-[#161b22] p-6 overflow-auto">
+    <div className="h-full bg-[#161b22] p-6 overflow-auto ">
       <div className="flex items-center gap-2 mb-6">
         <h2 className="text-xl font-mono text-[#00d2ff]">Tech Stack</h2>
         <span className="w-2.5 h-4 bg-[#00d2ff] cursor-blink" />
