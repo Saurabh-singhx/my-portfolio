@@ -1,9 +1,8 @@
 'use client';
 
 import { useRef, ReactNode, useSyncExternalStore } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Rnd, ResizableDelta, Position } from 'react-rnd';
-import { X, Minus, Maximize2, Minimize2 } from 'lucide-react';
+import { X, Minus, Maximize2, Minimize2, Terminal, Folder, Braces, Mail, FileText } from 'lucide-react';
 import { useWindowManager } from '@/context/WindowManagerContext';
 import { WindowId } from '@/lib/types';
 
@@ -12,6 +11,14 @@ interface WindowProps {
   title: string;
   children: ReactNode;
 }
+
+const windowIcons: Record<WindowId, React.ReactNode> = {
+  terminal: <Terminal size={14} className="text-[#00ff41]" />,
+  projects: <Folder size={14} className="text-[#00d2ff]" />,
+  skills: <Braces size={14} className="text-[#ffbd2e]" />,
+  contact: <Mail size={14} className="text-[#a855f7]" />,
+  resume: <FileText size={14} className="text-[#ff5f56]" />,
+};
 
 const emptySubscribe = () => () => {};
 const getClientMounted = () => true;
@@ -59,91 +66,112 @@ export function Window({ id, title, children }: WindowProps) {
   };
 
   return (
-    <AnimatePresence>
-      <motion.div
-        key={id}
-        initial={{ opacity: 0, scale: 0.92, y: 15 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.92, y: 15 }}
-        transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+    <Rnd
+      ref={rndRef}
+      position={windowState.position}
+      size={windowState.size}
+      minWidth={360}
+      minHeight={260}
+      bounds="window"
+      dragHandleClassName="window-titlebar"
+      cancel=".window-control-btn, input, textarea, button, a"
+      disableDragging={windowState.isMaximized}
+      enableResizing={!windowState.isMaximized}
+      onDragStop={handleDragStop}
+      onResizeStop={handleResizeStop}
+      onMouseDown={() => bringToFront(id)}
+      style={{ zIndex: windowState.zIndex }}
+      className="pointer-events-auto select-none"
+      resizeHandleClasses={{
+        bottom: 'h-2 cursor-ns-resize',
+        bottomLeft: 'w-3 h-3 cursor-nesw-resize',
+        bottomRight: 'w-3 h-3 cursor-nwse-resize',
+        left: 'w-2 cursor-ew-resize',
+        right: 'w-2 cursor-ew-resize',
+        top: 'h-2 cursor-ns-resize',
+        topLeft: 'w-3 h-3 cursor-nwse-resize',
+        topRight: 'w-3 h-3 cursor-nesw-resize',
+      }}
+    >
+      <div
+        className={`w-full h-full flex flex-col rounded-xl overflow-hidden backdrop-blur-2xl transition-all duration-150 ${
+          isActive
+            ? 'shadow-[0_24px_70px_rgba(0,0,0,0.85),0_0_0_1px_rgba(0,210,255,0.35)] bg-[#111620] border border-[#00d2ff]/40'
+            : 'shadow-[0_16px_40px_rgba(0,0,0,0.6)] bg-[#111620]/90 border border-white/10'
+        }`}
       >
-        <Rnd
-          ref={rndRef}
-          position={windowState.position}
-          size={windowState.size}
-          minWidth={360}
-          minHeight={260}
-          bounds="parent"
-          disableDragging={windowState.isMaximized}
-          enableResizing={!windowState.isMaximized}
-          onDragStop={handleDragStop}
-          onResizeStop={handleResizeStop}
-          onMouseDown={() => bringToFront(id)}
-          dragHandleClassName="window-titlebar"
-          style={{ zIndex: windowState.zIndex }}
-          className={`rounded-xl overflow-hidden backdrop-blur-xl transition-shadow duration-200 flex flex-col ${
-            isActive
-              ? 'shadow-[0_24px_70px_rgba(0,0,0,0.85),0_0_0_1px_rgba(0,210,255,0.3)] bg-[#161b22]/95 border border-[#00d2ff]/30'
-              : 'shadow-[0_16px_40px_rgba(0,0,0,0.6)] bg-[#161b22]/90 border border-white/[0.08]'
+        {/* Title Bar */}
+        <div
+          className={`window-titlebar h-10 flex items-center justify-between px-3 gap-3 select-none cursor-move border-b border-white/[0.08] transition-colors ${
+            isActive ? 'bg-[#18202e]' : 'bg-[#131a24]'
           }`}
+          onDoubleClick={() => toggleMaximizeWindow(id)}
         >
-          {/* Title Bar */}
-          <div
-            className={`window-titlebar h-9 flex items-center px-3 gap-2 select-none cursor-default transition-colors ${
-              isActive ? 'bg-[#1c2333]' : 'bg-[#151a26]'
-            }`}
-            onDoubleClick={() => toggleMaximizeWindow(id)}
-          >
-            {/* Window Controls */}
-            <div className="flex items-center gap-2">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  closeWindow(id);
-                }}
-                title="Close"
-                className="w-3.5 h-3.5 rounded-full bg-[#ff5f56] hover:bg-[#ff5f56]/80 transition-colors flex items-center justify-center group"
-              >
-                <X size={8} className="opacity-0 group-hover:opacity-100 text-black font-bold" />
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  minimizeWindow(id);
-                }}
-                title="Minimize"
-                className="w-3.5 h-3.5 rounded-full bg-[#ffbd2e] hover:bg-[#ffbd2e]/80 transition-colors flex items-center justify-center group"
-              >
-                <Minus size={8} className="opacity-0 group-hover:opacity-100 text-black font-bold" />
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleMaximizeWindow(id);
-                }}
-                title={windowState.isMaximized ? 'Restore' : 'Maximize'}
-                className="w-3.5 h-3.5 rounded-full bg-[#27c93f] hover:bg-[#27c93f]/80 transition-colors flex items-center justify-center group"
-              >
-                {windowState.isMaximized ? (
-                  <Minimize2 size={7} className="opacity-0 group-hover:opacity-100 text-black font-bold" />
-                ) : (
-                  <Maximize2 size={7} className="opacity-0 group-hover:opacity-100 text-black font-bold" />
-                )}
-              </button>
+          {/* Left: Window Icon & Title */}
+          <div className="flex items-center gap-2.5 min-w-0 pr-2 pointer-events-none">
+            <div className="p-1 rounded bg-white/5 border border-white/10 flex-shrink-0">
+              {windowIcons[id]}
             </div>
-
-            {/* Title */}
-            <div className="flex-1 text-center text-xs font-mono text-[#8b949e] pr-14 truncate">
+            <span className="text-xs font-mono font-medium text-[#e6edf3] truncate">
               {title}
-            </div>
+            </span>
+            {isActive && (
+              <span className="w-1.5 h-1.5 rounded-full bg-[#00d2ff] animate-pulse flex-shrink-0" />
+            )}
           </div>
 
-          {/* Content */}
-          <div className="flex-1 overflow-auto bg-[#0d1117]/80">
-            {children}
+          {/* Right: Modern Window Controls (Minimize, Maximize/Restore, Close) */}
+          <div className="flex items-center gap-1 flex-shrink-0">
+            {/* Minimize */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                minimizeWindow(id);
+              }}
+              title="Minimize"
+              className="window-control-btn w-7 h-7 rounded-lg flex items-center justify-center text-[#8b949e] hover:text-[#ffbd2e] hover:bg-[#ffbd2e]/15 active:scale-95 transition-all"
+              aria-label="Minimize window"
+            >
+              <Minus size={13} strokeWidth={2.5} />
+            </button>
+
+            {/* Maximize / Restore */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleMaximizeWindow(id);
+              }}
+              title={windowState.isMaximized ? 'Restore Window' : 'Maximize Window'}
+              className="window-control-btn w-7 h-7 rounded-lg flex items-center justify-center text-[#8b949e] hover:text-[#00d2ff] hover:bg-[#00d2ff]/15 active:scale-95 transition-all"
+              aria-label={windowState.isMaximized ? 'Restore window' : 'Maximize window'}
+            >
+              {windowState.isMaximized ? (
+                <Minimize2 size={13} strokeWidth={2.5} />
+              ) : (
+                <Maximize2 size={13} strokeWidth={2.5} />
+              )}
+            </button>
+
+            {/* Close */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                closeWindow(id);
+              }}
+              title="Close"
+              className="window-control-btn w-7 h-7 rounded-lg flex items-center justify-center text-[#8b949e] hover:text-white hover:bg-[#ff5f56] active:scale-95 transition-all"
+              aria-label="Close window"
+            >
+              <X size={14} strokeWidth={2.5} />
+            </button>
           </div>
-        </Rnd>
-      </motion.div>
-    </AnimatePresence>
+        </div>
+
+        {/* Content Area */}
+        <div className="flex-1 overflow-auto bg-[#0b0e14]/90 select-text">
+          {children}
+        </div>
+      </div>
+    </Rnd>
   );
 }

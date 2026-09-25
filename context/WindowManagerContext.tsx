@@ -21,12 +21,12 @@ const defaultWindows: Record<WindowId, WindowState> = {
   projects: {
     id: 'projects',
     title: 'Featured Projects',
-    isOpen: true,
+    isOpen: false,
     isMinimized: false,
     isMaximized: false,
     zIndex: 10,
-    position: { x: 80, y: 50 },
-    size: { width: 780, height: 520 },
+    position: { x: 100, y: 60 },
+    size: { width: 800, height: 530 },
   },
   terminal: {
     id: 'terminal',
@@ -35,8 +35,8 @@ const defaultWindows: Record<WindowId, WindowState> = {
     isMinimized: false,
     isMaximized: false,
     zIndex: 9,
-    position: { x: 140, y: 90 },
-    size: { width: 680, height: 440 },
+    position: { x: 140, y: 80 },
+    size: { width: 700, height: 460 },
   },
   skills: {
     id: 'skills',
@@ -46,7 +46,7 @@ const defaultWindows: Record<WindowId, WindowState> = {
     isMaximized: false,
     zIndex: 8,
     position: { x: 180, y: 70 },
-    size: { width: 720, height: 500 },
+    size: { width: 740, height: 510 },
   },
   contact: {
     id: 'contact',
@@ -55,8 +55,8 @@ const defaultWindows: Record<WindowId, WindowState> = {
     isMinimized: false,
     isMaximized: false,
     zIndex: 7,
-    position: { x: 220, y: 80 },
-    size: { width: 600, height: 520 },
+    position: { x: 220, y: 75 },
+    size: { width: 620, height: 530 },
   },
   resume: {
     id: 'resume',
@@ -65,8 +65,8 @@ const defaultWindows: Record<WindowId, WindowState> = {
     isMinimized: false,
     isMaximized: false,
     zIndex: 6,
-    position: { x: 120, y: 40 },
-    size: { width: 760, height: 560 },
+    position: { x: 120, y: 50 },
+    size: { width: 780, height: 570 },
   },
 };
 
@@ -74,7 +74,7 @@ const WindowManagerContext = createContext<WindowManagerContextType | null>(null
 
 export function WindowManagerProvider({ children }: { children: React.ReactNode }) {
   const [windows, setWindows] = useState<Record<WindowId, WindowState>>(defaultWindows);
-  const [activeWindow, setActiveWindow] = useState<WindowId | null>('projects');
+  const [activeWindow, setActiveWindow] = useState<WindowId | null>(null);
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [maxZIndex, setMaxZIndex] = useState(20);
 
@@ -122,13 +122,40 @@ export function WindowManagerProvider({ children }: { children: React.ReactNode 
     setWindows((prev) => {
       const nextZ = maxZIndex + 1;
       setMaxZIndex(nextZ);
+      const current = prev[id];
+
+      let position = current.position;
+      let size = current.size;
+
+      if (typeof window !== 'undefined') {
+        const screenW = window.innerWidth;
+        const screenH = window.innerHeight;
+        const maxW = Math.max(360, screenW - 60);
+        const maxH = Math.max(280, screenH - 160);
+        size = {
+          width: Math.min(current.size.width, maxW),
+          height: Math.min(current.size.height, maxH),
+        };
+
+        // If opening for the first time or if position is off-screen, center it nicely
+        if (!current.isOpen || position.x + 80 > screenW || position.y + 80 > screenH || position.x < 10 || position.y < 35) {
+          const cascadeOffset = (nextZ % 5) * 20;
+          position = {
+            x: Math.max(20, Math.floor((screenW - size.width) / 2) + cascadeOffset),
+            y: Math.max(45, Math.floor((screenH - size.height) / 2) - 25 + cascadeOffset),
+          };
+        }
+      }
+
       return {
         ...prev,
         [id]: {
-          ...prev[id],
+          ...current,
           isOpen: true,
           isMinimized: false,
           zIndex: nextZ,
+          position,
+          size,
         },
       };
     });
@@ -172,13 +199,16 @@ export function WindowManagerProvider({ children }: { children: React.ReactNode 
             ...current,
             isMaximized: false,
             position: current.prevPosition || { x: 100, y: 60 },
-            size: current.prevSize || { width: 700, height: 480 },
+            size: current.prevSize || { width: 740, height: 500 },
           },
         };
       } else {
-        // Maximize to full available desktop area
-        const maxWidth = typeof window !== 'undefined' ? window.innerWidth - 32 : 1100;
-        const maxHeight = typeof window !== 'undefined' ? window.innerHeight - 130 : 680;
+        // Maximize to viewport area between Menubar (top: 36px) and Dock (bottom: 80px)
+        const screenW = typeof window !== 'undefined' ? window.innerWidth : 1200;
+        const screenH = typeof window !== 'undefined' ? window.innerHeight : 800;
+        const maxWidth = Math.max(500, screenW - 24);
+        const maxHeight = Math.max(400, screenH - 120);
+
         return {
           ...prev,
           [id]: {
@@ -186,10 +216,10 @@ export function WindowManagerProvider({ children }: { children: React.ReactNode 
             isMaximized: true,
             prevPosition: { ...current.position },
             prevSize: { ...current.size },
-            position: { x: 16, y: 36 },
+            position: { x: 12, y: 40 },
             size: {
-              width: Math.max(500, maxWidth),
-              height: Math.max(400, maxHeight),
+              width: maxWidth,
+              height: maxHeight,
             },
           },
         };
@@ -222,7 +252,7 @@ export function WindowManagerProvider({ children }: { children: React.ReactNode 
     setSoundEnabled((prev) => !prev);
   }, []);
 
-  // Ensure window positions fit within screen when resized
+  // Ensure window positions stay valid if viewport resizes
   useEffect(() => {
     const handleResize = () => {
       if (typeof window === 'undefined') return;
@@ -238,10 +268,10 @@ export function WindowManagerProvider({ children }: { children: React.ReactNode 
           if (w.isMaximized) {
             next[id] = {
               ...w,
-              position: { x: 16, y: 36 },
+              position: { x: 12, y: 40 },
               size: {
-                width: Math.max(400, screenW - 32),
-                height: Math.max(350, screenH - 130),
+                width: Math.max(400, screenW - 24),
+                height: Math.max(350, screenH - 120),
               },
             };
             changed = true;
@@ -249,8 +279,8 @@ export function WindowManagerProvider({ children }: { children: React.ReactNode 
             next[id] = {
               ...w,
               position: {
-                x: Math.max(20, Math.min(w.position.x, screenW - w.size.width - 20)),
-                y: Math.max(36, Math.min(w.position.y, screenH - w.size.height - 80)),
+                x: Math.max(16, Math.min(w.position.x, screenW - w.size.width - 16)),
+                y: Math.max(40, Math.min(w.position.y, screenH - w.size.height - 70)),
               },
             };
             changed = true;

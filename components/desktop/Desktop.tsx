@@ -62,72 +62,71 @@ export function Desktop() {
 
   return (
     <div
-      className="fixed inset-0 bg-[#0b0e14] overflow-hidden select-none"
+      id="desktop-root"
+      className="fixed inset-0 bg-[#070a0e] overflow-hidden select-none"
       onClick={() => setSelectedId(null)}
     >
       <ParticlesBackground />
       
       <Menubar />
       
-      <div className="absolute inset-0 pt-10 pb-24 px-6 pointer-events-auto">
-        {/* Desktop Icons Grid */}
-        <div className="flex flex-col gap-4 w-24">
-          {shortcuts.map((shortcut) => {
-            const isSelected = selectedId === shortcut.id;
-            return (
-              <button
-                key={shortcut.id}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSelectedId(shortcut.id);
-                  openWindow(shortcut.id);
-                }}
-                className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition-all group ${
-                  isSelected
-                    ? 'bg-white/15 ring-1 ring-[#00d2ff]'
-                    : 'hover:bg-white/10'
-                }`}
+      {/* Desktop Shortcuts Column */}
+      <div className="absolute top-12 left-6 flex flex-col gap-4 w-24 pointer-events-auto z-10">
+        {shortcuts.map((shortcut) => {
+          const isSelected = selectedId === shortcut.id;
+          return (
+            <button
+              key={shortcut.id}
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedId(shortcut.id);
+                openWindow(shortcut.id);
+              }}
+              className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition-all group ${
+                isSelected
+                  ? 'bg-white/15 ring-1 ring-[#00d2ff]'
+                  : 'hover:bg-white/10'
+              }`}
+            >
+              <div
+                className={`w-12 h-12 rounded-xl flex items-center justify-center border shadow-lg transition-transform group-hover:scale-105 ${shortcut.color}`}
               >
-                <div
-                  className={`w-12 h-12 rounded-xl flex items-center justify-center border shadow-lg transition-transform group-hover:scale-105 ${shortcut.color}`}
-                >
-                  {shortcut.icon}
-                </div>
-                <span className="text-[11px] text-[#e6edf3] font-mono px-1.5 py-0.5 rounded leading-tight text-center drop-shadow">
-                  {shortcut.label}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Windows */}
-        {windows.terminal.isOpen && (
-          <Window id="terminal" title="Terminal — saurabh@SaurabhOS:~">
-            <TerminalWindow />
-          </Window>
-        )}
-        {windows.projects.isOpen && (
-          <Window id="projects" title="Featured Projects — Sonix Music, FinAssist & More">
-            <ProjectsWindow />
-          </Window>
-        )}
-        {windows.skills.isOpen && (
-          <Window id="skills" title="Technical Skills & System Architecture">
-            <SkillsWindow />
-          </Window>
-        )}
-        {windows.contact.isOpen && (
-          <Window id="contact" title="Get in Touch — get_in_touch.sh">
-            <ContactWindow />
-          </Window>
-        )}
-        {windows.resume.isOpen && (
-          <Window id="resume" title="Curriculum Vitae — Saurabh Kumar">
-            <ResumeWindow />
-          </Window>
-        )}
+                {shortcut.icon}
+              </div>
+              <span className="text-[11px] text-[#e6edf3] font-mono px-1.5 py-0.5 rounded leading-tight text-center drop-shadow">
+                {shortcut.label}
+              </span>
+            </button>
+          );
+        })}
       </div>
+
+      {/* Windows Layer - Rendered directly on the desktop coordinate space */}
+      {windows.terminal.isOpen && (
+        <Window id="terminal" title="Terminal — saurabh@SaurabhOS:~">
+          <TerminalWindow />
+        </Window>
+      )}
+      {windows.projects.isOpen && (
+        <Window id="projects" title="Featured Projects — Sonix Music, FinAssist & More">
+          <ProjectsWindow />
+        </Window>
+      )}
+      {windows.skills.isOpen && (
+        <Window id="skills" title="Technical Skills & System Architecture">
+          <SkillsWindow />
+        </Window>
+      )}
+      {windows.contact.isOpen && (
+        <Window id="contact" title="Get in Touch — get_in_touch.sh">
+          <ContactWindow />
+        </Window>
+      )}
+      {windows.resume.isOpen && (
+        <Window id="resume" title="Curriculum Vitae — Saurabh Kumar">
+          <ResumeWindow />
+        </Window>
+      )}
 
       <Dock />
     </div>
