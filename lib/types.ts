@@ -1,15 +1,49 @@
+export type WindowId = 'terminal' | 'projects' | 'skills' | 'contact' | 'resume';
+
+export interface WindowPosition {
+  x: number;
+  y: number;
+}
+
+export interface WindowSize {
+  width: number;
+  height: number;
+}
+
+export interface WindowState {
+  id: WindowId;
+  title: string;
+  isOpen: boolean;
+  isMinimized: boolean;
+  isMaximized: boolean;
+  zIndex: number;
+  position: WindowPosition;
+  size: WindowSize;
+  prevPosition?: WindowPosition;
+  prevSize?: WindowSize;
+}
+
 export interface Project {
   id: string;
   name: string;
   subtitle: string;
-  type: string;
-  status: 'Live' | 'Integrated' | 'Delivered';
-  icon: string;
-  iconColor: string;
+  description: string;
   tech: string[];
   liveUrl?: string;
   githubUrl: string;
   highlights: string[];
+  status: 'Live' | 'In Production' | 'Deployed' | 'Completed';
+  type: string;
+  icon: 'music' | 'brain' | 'building' | 'code';
+  iconColor: string;
+  metrics?: string[];
+  architecture?: string[];
+}
+
+export interface SkillItem {
+  name: string;
+  isTextBadge?: boolean;
+  level?: string;
 }
 
 export interface SkillCategory {
@@ -17,10 +51,33 @@ export interface SkillCategory {
   items: SkillItem[];
 }
 
-export interface SkillItem {
+export interface SkillBar {
   name: string;
-  icon?: string;
-  isTextBadge?: boolean;
+  level: number;
+  label?: string;
+}
+
+export interface ResumeExperience {
+  title: string;
+  company: string;
+  location: string;
+  period: string;
+  bullets: string[];
+}
+
+export interface ResumeProject {
+  name: string;
+  description: string;
+  tech?: string[];
+  bullets?: string[];
+}
+
+export interface ResumeEducation {
+  degree: string;
+  institution: string;
+  location: string;
+  period: string;
+  grade?: string;
 }
 
 export interface ResumeData {
@@ -41,38 +98,9 @@ export interface ResumeData {
     frontend: string[];
     tools: string[];
   };
-  experience: {
-    title: string;
-    company: string;
-    location: string;
-    period: string;
-    bullets: string[];
-  }[];
-  projects: {
-    name: string;
-    description: string;
-  }[];
-  education: {
-    degree: string;
-    institution: string;
-    location: string;
-    period: string;
-  }[];
+  experience: ResumeExperience[];
+  projects: ResumeProject[];
+  education: ResumeEducation[];
+  certifications: string[];
   achievements: string[];
-}
-
-export interface WindowState {
-  id: string;
-  isOpen: boolean;
-  isMinimized: boolean;
-  zIndex: number;
-  position: { x: number; y: number };
-  size: { width: number; height: number };
-}
-
-export type WindowId = 'terminal' | 'projects' | 'skills' | 'contact' | 'resume';
-
-export interface TerminalCommand {
-  command: string;
-  output: string | React.ReactNode;
 }

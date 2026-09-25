@@ -1,9 +1,9 @@
 'use client';
 
-import { useRef, ReactNode } from 'react';
+import { useRef, ReactNode, useSyncExternalStore } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Rnd } from 'react-rnd';
-import { X, Minus, Square } from 'lucide-react';
+import { Rnd, ResizableDelta, Position } from 'react-rnd';
+import { X, Minus, Maximize2, Minimize2 } from 'lucide-react';
 import { useWindowManager } from '@/context/WindowManagerContext';
 import { WindowId } from '@/lib/types';
 
@@ -13,21 +13,47 @@ interface WindowProps {
   children: ReactNode;
 }
 
+const emptySubscribe = () => () => {};
+const getClientMounted = () => true;
+const getServerMounted = () => false;
+
 export function Window({ id, title, children }: WindowProps) {
-  const { windows, closeWindow, minimizeWindow, bringToFront, updateWindowPosition, updateWindowSize } = useWindowManager();
+  const {
+    windows,
+    activeWindow,
+    closeWindow,
+    minimizeWindow,
+    toggleMaximizeWindow,
+    bringToFront,
+    updateWindowPosition,
+    updateWindowSize,
+  } = useWindowManager();
+
   const windowState = windows[id];
   const rndRef = useRef<Rnd>(null);
+  const mounted = useSyncExternalStore(emptySubscribe, getClientMounted, getServerMounted);
 
-  if (!windowState.isOpen || windowState.isMinimized) return null;
+  if (!mounted || !windowState.isOpen || windowState.isMinimized) return null;
 
-  const handleDragStop = (_e: any, d: { x: number; y: number }) => {
+  const isActive = activeWindow === id;
+
+  const handleDragStop = (
+    _e: unknown,
+    d: { x: number; y: number }
+  ) => {
     updateWindowPosition(id, { x: d.x, y: d.y });
   };
 
-  const handleResizeStop = (_e: any, _direction: any, ref: HTMLElement, _delta: any, position: { x: number; y: number }) => {
-    updateWindowSize(id, { 
-      width: parseInt(ref.style.width), 
-      height: parseInt(ref.style.height) 
+  const handleResizeStop = (
+    _e: MouseEvent | TouchEvent,
+    _direction: string,
+    ref: HTMLElement,
+    _delta: ResizableDelta,
+    position: Position
+  ) => {
+    updateWindowSize(id, {
+      width: parseInt(ref.style.width, 10),
+      height: parseInt(ref.style.height, 10),
     });
     updateWindowPosition(id, position);
   };
@@ -36,84 +62,84 @@ export function Window({ id, title, children }: WindowProps) {
     <AnimatePresence>
       <motion.div
         key={id}
-        initial={{ opacity: 0, scale: 0.85 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.85 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        initial={{ opacity: 0, scale: 0.92, y: 15 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.92, y: 15 }}
+        transition={{ type: 'spring', stiffness: 350, damping: 28 }}
       >
         <Rnd
           ref={rndRef}
-          default={{
-            x: typeof window !== 'undefined' ? window.innerWidth / 2 - windowState.size.width / 2 : 100,
-            y: typeof window !== 'undefined' ? window.innerHeight / 2 - windowState.size.height / 2 : 100,
-            width: windowState.size.width,
-            height: windowState.size.height,
-          }}
           position={windowState.position}
           size={windowState.size}
-          minWidth={400}
-          minHeight={300}
-          // ❌ REMOVED: bounds="parent" — was causing vertical drag issues
+          minWidth={360}
+          minHeight={260}
+          bounds="parent"
+          disableDragging={windowState.isMaximized}
+          enableResizing={!windowState.isMaximized}
           onDragStop={handleDragStop}
           onResizeStop={handleResizeStop}
           onMouseDown={() => bringToFront(id)}
           dragHandleClassName="window-titlebar"
           style={{ zIndex: windowState.zIndex }}
-          // ✅ ADDED: explicit resize directions
-          enableResizing={{
-            top: true,
-            right: true,
-            bottom: true,
-            left: true,
-            topRight: true,
-            bottomRight: true,
-            bottomLeft: true,
-            topLeft: true,
-          }}
-          // ✅ ADDED: visible resize handle styles
-          resizeHandleStyles={{
-            top: { cursor: 'ns-resize', height: '8px', top: '-4px' },
-            right: { cursor: 'ew-resize', width: '8px', right: '-4px' },
-            bottom: { cursor: 'ns-resize', height: '8px', bottom: '-4px' },
-            left: { cursor: 'ew-resize', width: '8px', left: '-4px' },
-            topRight: { cursor: 'nesw-resize', width: '12px', height: '12px', top: '-4px', right: '-4px' },
-            bottomRight: { cursor: 'nwse-resize', width: '12px', height: '12px', bottom: '-4px', right: '-4px' },
-            bottomLeft: { cursor: 'nesw-resize', width: '12px', height: '12px', bottom: '-4px', left: '-4px' },
-            topLeft: { cursor: 'nwse-resize', width: '12px', height: '12px', top: '-4px', left: '-4px' },
-          }}
-          className="shadow-[0_20px_60px_rgba(0,0,0,0.8)] rounded-lg overflow-hidden border border-white/[0.08] bg-[#161b22]"
+          className={`rounded-xl overflow-hidden backdrop-blur-xl transition-shadow duration-200 flex flex-col ${
+            isActive
+              ? 'shadow-[0_24px_70px_rgba(0,0,0,0.85),0_0_0_1px_rgba(0,210,255,0.3)] bg-[#161b22]/95 border border-[#00d2ff]/30'
+              : 'shadow-[0_16px_40px_rgba(0,0,0,0.6)] bg-[#161b22]/90 border border-white/[0.08]'
+          }`}
         >
           {/* Title Bar */}
-          <div className="window-titlebar h-8 bg-[#1c2333] flex items-center px-3 gap-2 select-none cursor-default">
+          <div
+            className={`window-titlebar h-9 flex items-center px-3 gap-2 select-none cursor-default transition-colors ${
+              isActive ? 'bg-[#1c2333]' : 'bg-[#151a26]'
+            }`}
+            onDoubleClick={() => toggleMaximizeWindow(id)}
+          >
             {/* Window Controls */}
             <div className="flex items-center gap-2">
               <button
-                onClick={() => closeWindow(id)}
-                className="w-3 h-3 rounded-full bg-[#ff5f56] hover:bg-[#ff5f56]/80 transition-colors flex items-center justify-center group"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  closeWindow(id);
+                }}
+                title="Close"
+                className="w-3.5 h-3.5 rounded-full bg-[#ff5f56] hover:bg-[#ff5f56]/80 transition-colors flex items-center justify-center group"
               >
-                <X size={8} className="opacity-0 group-hover:opacity-100 text-black" />
+                <X size={8} className="opacity-0 group-hover:opacity-100 text-black font-bold" />
               </button>
               <button
-                onClick={() => minimizeWindow(id)}
-                className="w-3 h-3 rounded-full bg-[#ffbd2e] hover:bg-[#ffbd2e]/80 transition-colors flex items-center justify-center group"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  minimizeWindow(id);
+                }}
+                title="Minimize"
+                className="w-3.5 h-3.5 rounded-full bg-[#ffbd2e] hover:bg-[#ffbd2e]/80 transition-colors flex items-center justify-center group"
               >
-                <Minus size={8} className="opacity-0 group-hover:opacity-100 text-black" />
+                <Minus size={8} className="opacity-0 group-hover:opacity-100 text-black font-bold" />
               </button>
               <button
-                className="w-3 h-3 rounded-full bg-[#27c93f] hover:bg-[#27c93f]/80 transition-colors flex items-center justify-center group"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleMaximizeWindow(id);
+                }}
+                title={windowState.isMaximized ? 'Restore' : 'Maximize'}
+                className="w-3.5 h-3.5 rounded-full bg-[#27c93f] hover:bg-[#27c93f]/80 transition-colors flex items-center justify-center group"
               >
-                <Square size={6} className="opacity-0 group-hover:opacity-100 text-black" />
+                {windowState.isMaximized ? (
+                  <Minimize2 size={7} className="opacity-0 group-hover:opacity-100 text-black font-bold" />
+                ) : (
+                  <Maximize2 size={7} className="opacity-0 group-hover:opacity-100 text-black font-bold" />
+                )}
               </button>
             </div>
-            
+
             {/* Title */}
-            <div className="flex-1 text-center text-xs font-mono text-[#8b949e] pr-16">
+            <div className="flex-1 text-center text-xs font-mono text-[#8b949e] pr-14 truncate">
               {title}
             </div>
           </div>
-          
+
           {/* Content */}
-          <div className="h-[calc(100%-32px)] overflow-auto">
+          <div className="flex-1 overflow-auto bg-[#0d1117]/80">
             {children}
           </div>
         </Rnd>

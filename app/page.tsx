@@ -1,39 +1,51 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { BootSequence } from '@/components/desktop/BootSequence';
 import { Desktop } from '@/components/desktop/Desktop';
 import { MobileLayout } from '@/components/mobile/MobileLayout';
 
+const emptySubscribe = () => () => {};
+const getSessionBootPlayed = () => {
+  try {
+    return typeof window !== 'undefined' && sessionStorage.getItem('saurabhos-boot-played') === 'true';
+  } catch {
+    return false;
+  }
+};
+const getServerSnapshot = () => false;
+
 export default function Home() {
-  const [bootComplete, setBootComplete] = useState(false);
-  const [skipBoot, setSkipBoot] = useState(false);
+  const hasPlayedSession = useSyncExternalStore(emptySubscribe, getSessionBootPlayed, getServerSnapshot);
+  const [userFinishedBoot, setUserFinishedBoot] = useState(false);
   const isMobile = useMediaQuery('(max-width: 767px)');
 
-  useEffect(() => {
-    const hasPlayed = sessionStorage.getItem('saurabhos-boot-played');
-    if (hasPlayed) {
-      setSkipBoot(true);
-    }
-  }, []);
-
   const handleBootComplete = () => {
-    sessionStorage.setItem('saurabhos-boot-played', 'true');
-    setBootComplete(true);
+    try {
+      sessionStorage.setItem('saurabhos-boot-played', 'true');
+    } catch {
+      // Storage unavailable
+    }
+    setUserFinishedBoot(true);
   };
 
   const handleSkipBoot = () => {
-    sessionStorage.setItem('saurabhos-boot-played', 'true');
-    setSkipBoot(true);
-    setBootComplete(true);
+    try {
+      sessionStorage.setItem('saurabhos-boot-played', 'true');
+    } catch {
+      // Storage unavailable
+    }
+    setUserFinishedBoot(true);
   };
 
+  // Mobile: direct streamlined experience
   if (isMobile) {
     return <MobileLayout />;
   }
 
-  if (!skipBoot && !bootComplete) {
+  // Desktop: show boot sequence if not previously played in this session and not completed
+  if (!hasPlayedSession && !userFinishedBoot) {
     return <BootSequence onComplete={handleBootComplete} onSkip={handleSkipBoot} />;
   }
 

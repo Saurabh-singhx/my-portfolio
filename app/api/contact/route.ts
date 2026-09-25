@@ -1,60 +1,75 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
+import { z } from 'zod';
 
-export async function POST(request: Request) {
+const contactRequestSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(100),
+  email: z.string().email('Invalid email address').max(150),
+  message: z.string().min(5, 'Message must be at least 5 characters').max(2000),
+});
+
+export async function POST(req: Request) {
   try {
-    const body = await request.json();
-    const { name, email, message } = body;
+    const body = await req.json();
+    const result = contactRequestSchema.safeParse(body);
 
-    if (!name || !email || !message) {
+    if (!result.success) {
       return NextResponse.json(
-        { error: 'All fields are required' },
+        { success: false, errors: result.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
 
-    const transporter = nodemailer.createTransport({
-      host: process.env.CONTACT_EMAIL_HOST || 'smtp.gmail.com',
-      port: parseInt(process.env.CONTACT_EMAIL_PORT || '587'),
-      secure: false,
-      auth: {
-        user: process.env.CONTACT_EMAIL_USER,
-        pass: process.env.CONTACT_EMAIL_PASS,
-      },
-    });
+    const { name, email, message } = result.data;
 
-    const mailOptions = {
-      from: process.env.CONTACT_EMAIL_USER,
-      to: process.env.CONTACT_EMAIL_TO || 'saurabh4442kumar@gmail.com',
-      subject: `Portfolio Contact: ${name}`,
-      text: `Name: ${name}
-Email: ${email}
+    // Optional nodemailer transport if SMTP env variables are configured
+    const smtpHost = process.env.SMTP_HOST;
+    const smtpPort = process.env.SMTP_PORT;
+    const smtpUser = process.env.SMTP_USER;
+    const smtpPass = process.env.SMTP_PASS;
 
-Message:
-${message}`,
-      html: `
-        <div style="font-family: monospace; background: #0d1117; color: #e6edf3; padding: 20px; border-radius: 8px;">
-          <h2 style="color: #00ff41;">New Contact Form Submission</h2>
-          <p><strong style="color: #00d2ff;">Name:</strong> ${name}</p>
-          <p><strong style="color: #00d2ff;">Email:</strong> ${email}</p>
-          <p><strong style="color: #00d2ff;">Message:</strong></p>
-          <div style="background: #161b22; padding: 12px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.08);">
-            ${message.replace(/ /g, '&nbsp;').replace(/\n/g, '<br>')}
+    if (smtpHost && smtpUser && smtpPass) {
+      const transporter = nodemailer.createTransport({
+        host: smtpHost,
+        port: Number(smtpPort) || 587,
+        secure: Number(smtpPort) === 465,
+        auth: {
+          user: smtpUser,
+          pass: smtpPass,
+        },
+      });
+
+      await transporter.sendMail({
+        from: `"${name} (Portfolio)" <${smtpUser}>`,
+        to: process.env.CONTACT_RECEIVER_EMAIL || 'saurabh4442kumar@gmail.com',
+        replyTo: email,
+        subject: `[Portfolio Inquiry] from ${name}`,
+        text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+            <h2 style="color: #0066cc;">New Message from Portfolio Website</h2>
+            <p><strong>From:</strong> ${name} &lt;${email}&gt;</p>
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+            <p style="white-space: pre-wrap; font-size: 15px; line-height: 1.6;">${message}</p>
           </div>
-        </div>
-      `,
-    };
-
-    await transporter.sendMail(mailOptions);
+        `,
+      });
+    } else {
+      // In development or when SMTP is not configured, log transmission
+      console.log(`[Contact Form Submission] Name: ${name}, Email: ${email}, Message: ${message}`);
+    }
 
     return NextResponse.json(
-      { success: true, message: 'Email sent successfully' },
+      {
+        success: true,
+        message: 'Message delivered successfully.',
+      },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Contact API error:', error);
+    console.error('[Contact API Error]:', error);
     return NextResponse.json(
-      { error: 'Failed to send email' },
+      { success: false, error: 'Internal server error processing contact message.' },
       { status: 500 }
     );
   }
