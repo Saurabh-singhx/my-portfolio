@@ -10,17 +10,33 @@ interface ThemeContextType {
   currentTheme: ThemeDefinition;
 }
 
+const legacyMap: Record<string, string> = {
+  'tokyo-night': 'cyber-emerald',
+  'dracula': 'synthwave',
+  'catppuccin': 'sunset-amber',
+  'nord': 'nordic-frost',
+};
+
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<string>(DEFAULT_THEME);
 
   useEffect(() => {
-    const saved = localStorage.getItem('saurabhos-theme');
-    if (saved && themes.some((t) => t.id === saved)) {
-      setThemeState(saved);
-      document.documentElement.setAttribute('data-theme', saved);
-    } else {
+    try {
+      const saved = localStorage.getItem('saurabhos-theme');
+      let targetTheme = DEFAULT_THEME;
+
+      if (saved && themes.some((t) => t.id === saved)) {
+        targetTheme = saved;
+      } else if (saved && legacyMap[saved]) {
+        targetTheme = legacyMap[saved];
+      }
+
+      setThemeState(targetTheme);
+      localStorage.setItem('saurabhos-theme', targetTheme);
+      document.documentElement.setAttribute('data-theme', targetTheme);
+    } catch {
       document.documentElement.setAttribute('data-theme', DEFAULT_THEME);
     }
   }, []);

@@ -38,10 +38,10 @@ export function ParticlesBackground() {
 
     // Extract dynamic theme accent colors
     const computed = getComputedStyle(document.documentElement);
-    const accentPrimary = computed.getPropertyValue('--accent-primary').trim() || '#7aa2f7';
-    const accentSecondary = computed.getPropertyValue('--accent-secondary').trim() || '#9ece6a';
-    const accentTertiary = computed.getPropertyValue('--accent-tertiary').trim() || '#e0af68';
-    const accentPurple = computed.getPropertyValue('--accent-purple').trim() || '#bb9af7';
+    const accentPrimary = computed.getPropertyValue('--accent-primary').trim() || '#00f5a0';
+    const accentSecondary = computed.getPropertyValue('--accent-secondary').trim() || '#00d2ff';
+    const accentTertiary = computed.getPropertyValue('--accent-tertiary').trim() || '#facc15';
+    const accentPurple = computed.getPropertyValue('--accent-purple').trim() || '#a855f7';
 
     const colors = [accentPrimary, accentSecondary, accentTertiary, accentPurple];
 

@@ -181,9 +181,9 @@ export function Menubar() {
           </button>
 
           {themeMenuOpen && (
-            <div className="absolute top-8 right-0 w-56 bg-[var(--bg-secondary)]/95 backdrop-blur-2xl border border-[var(--border-primary)] rounded-xl p-2 shadow-2xl z-50 text-xs text-[var(--text-primary)] space-y-1">
-              <div className="px-2 py-1 border-b border-[var(--border-subtle)] text-[10px] uppercase tracking-wider text-[var(--text-tertiary)] font-bold">
-                Select Color Theme
+            <div className="absolute top-8 right-0 w-64 bg-[var(--bg-secondary)]/95 backdrop-blur-2xl border border-[var(--border-primary)] rounded-xl p-2 shadow-2xl z-50 text-xs text-[var(--text-primary)] space-y-1">
+              <div className="px-2.5 py-1.5 border-b border-[var(--border-subtle)] text-[10px] uppercase tracking-wider text-[var(--text-tertiary)] font-bold flex items-center justify-between">
+                <span>Theme & Font Pairing</span>
               </div>
               {themes.map((t) => {
                 const isActive = t.id === theme;
@@ -194,14 +194,14 @@ export function Menubar() {
                       setTheme(t.id);
                       setThemeMenuOpen(false);
                     }}
-                    className={`w-full text-left px-2 py-1.5 rounded-lg flex items-center justify-between transition-colors ${
+                    className={`w-full text-left px-2.5 py-2 rounded-lg flex items-center justify-between transition-colors ${
                       isActive
                         ? 'bg-[var(--accent-primary)]/15 text-white border border-[var(--accent-primary)]/30'
                         : 'hover:bg-[var(--bg-hover)] text-[var(--text-secondary)]'
                     }`}
                   >
                     <div className="flex items-center gap-2.5">
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1 shrink-0">
                         <div
                           className="w-3.5 h-3.5 rounded-full border border-white/20 shadow-sm"
                           style={{ backgroundColor: t.preview.bg }}
@@ -212,11 +212,18 @@ export function Menubar() {
                         />
                       </div>
                       <div>
-                        <div className="font-semibold text-white text-[11px]">{t.name}</div>
-                        <div className="text-[10px] text-[var(--text-tertiary)]">{t.label}</div>
+                        <div 
+                          className="font-bold text-white text-[12px] tracking-wide"
+                          style={{ fontFamily: t.fontSansVar }}
+                        >
+                          {t.name}
+                        </div>
+                        <div className="text-[10px] text-[var(--text-tertiary)] font-mono">
+                          {t.label}
+                        </div>
                       </div>
                     </div>
-                    {isActive && <Check size={14} className="text-[var(--accent-primary)]" />}
+                    {isActive && <Check size={14} className="text-[var(--accent-primary)] shrink-0 ml-1.5" />}
                   </button>
                 );
               })}

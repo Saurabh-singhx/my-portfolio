@@ -27,7 +27,7 @@ export function TerminalWindow() {
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { openWindow } = useWindowManager();
-  const { theme, setTheme, themes } = useTheme();
+  const { setTheme, themes, currentTheme } = useTheme();
 
   const processCommand = useCallback(
     (cmd: string) => {
@@ -44,13 +44,13 @@ export function TerminalWindow() {
       // Intercept theme switching in terminal
       if (lower === 'theme') {
         if (!arg) {
-          const available = themes.map((t) => `  • ${t.id} (${t.name})`).join('\n');
+          const available = themes.map((t) => `  • ${t.id.padEnd(14)} [${t.name}] — ${t.label}`).join('\n');
           setLines((prev) => [
             ...prev,
             { type: 'input', content: `saurabh@SaurabhOS:~$ ${trimmed}` },
             {
               type: 'output',
-              content: `Active Theme: ${theme}\nAvailable themes:\n${available}\n\nUsage: theme <name> (e.g. 'theme dracula')`,
+              content: `Active Theme: ${currentTheme.name} (${currentTheme.id})\nActive Font:  ${currentTheme.fontSans} (UI) + ${currentTheme.fontMono} (Code)\n\nAvailable themes & fonts:\n${available}\n\nUsage: theme <name> (e.g. 'theme synthwave')`,
             },
           ]);
           return;
@@ -62,7 +62,7 @@ export function TerminalWindow() {
           setLines((prev) => [
             ...prev,
             { type: 'input', content: `saurabh@SaurabhOS:~$ ${trimmed}` },
-            { type: 'output', content: `Switched theme to ${match.name} (${match.label}).` },
+            { type: 'output', content: `Switched theme to ${match.name} [Font: ${match.fontSans} + ${match.fontMono}].` },
           ]);
           return;
         } else {
@@ -101,7 +101,7 @@ export function TerminalWindow() {
         ]);
       }
     },
-    [openWindow, theme, setTheme, themes]
+    [openWindow, setTheme, themes, currentTheme]
   );
 
   const handleSubmit = (e: React.FormEvent) => {

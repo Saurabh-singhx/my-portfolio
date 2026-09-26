@@ -20,7 +20,7 @@ export function handleCommand(cmd: string): CommandResult {
   certifications    - View honors and hackathon certificates
   achievements      - View technical milestones
   contact           - Display email, phone, and social links
-  theme [name]      - View or switch color theme (tokyo-night, catppuccin, dracula, nord)
+  theme [name]      - View or switch aesthetic theme (cyber-emerald, synthwave, sunset-amber, nordic-frost)
   open <app>        - Open a desktop window (projects, skills, contact, resume)
   cat resume.pdf    - Output full resume text to terminal
   neofetch          - Show SaurabhOS system specification
@@ -193,7 +193,7 @@ Run 'open resume' to view the PDF or download it.`,
       return {
         output: subArg
           ? `Switched theme to ${subArg}.`
-          : `Usage: theme <name>\nAvailable themes: tokyo-night, catppuccin, dracula, nord`,
+          : `Usage: theme <name>\nAvailable themes: cyber-emerald, synthwave, sunset-amber, nordic-frost`,
       };
 
     case 'echo':

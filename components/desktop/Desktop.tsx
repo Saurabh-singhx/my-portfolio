@@ -92,6 +92,14 @@ export function Desktop() {
       className="fixed inset-0 bg-[var(--bg-primary)] overflow-hidden select-none transition-colors duration-250"
       onClick={() => setSelectedId(null)}
     >
+      {/* Dynamic Ambient Theme Atmosphere */}
+      <div 
+        className="absolute inset-0 pointer-events-none opacity-25 transition-all duration-700"
+        style={{
+          background: 'radial-gradient(circle at 18% 22%, var(--accent-primary) 0%, transparent 45%), radial-gradient(circle at 82% 78%, var(--accent-secondary) 0%, transparent 50%)',
+          filter: 'blur(70px)',
+        }}
+      />
       <ParticlesBackground />
       
       <Menubar />

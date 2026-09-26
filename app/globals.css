@@ -23,131 +23,147 @@
   --color-border-primary: var(--border-primary);
   --color-border-subtle: var(--border-subtle);
 
-  --font-sans: var(--font-space-grotesk), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans: var(--font-theme-sans);
+  --font-mono: var(--font-theme-mono);
 }
 
-/* Default / Tokyo Night (Primary Theme) */
+/* 1. Cyber Emerald (Primary Theme: Obsidian & Electric Mint) */
 :root,
+[data-theme="cyber-emerald"],
 [data-theme="tokyo-night"] {
-  --bg-primary: #1a1b26;
-  --bg-secondary: #24283b;
-  --bg-tertiary: #1f2335;
-  --bg-surface: #16161e;
-  --bg-hover: rgba(255, 255, 255, 0.08);
+  --font-theme-sans: var(--font-plus-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-theme-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  --text-primary: #c0caf5;
-  --text-secondary: #a9b1d6;
-  --text-tertiary: #565f89;
+  --bg-primary: #080b0f;
+  --bg-secondary: #0f1720;
+  --bg-tertiary: #16222f;
+  --bg-surface: #05070a;
+  --bg-hover: rgba(0, 245, 160, 0.08);
 
-  --accent-primary: #7aa2f7;
-  --accent-secondary: #9ece6a;
-  --accent-tertiary: #e0af68;
-  --accent-purple: #bb9af7;
-  --accent-red: #f7768e;
+  --text-primary: #e6f4ea;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #475569;
 
-  --border-primary: #3b4261;
-  --border-subtle: rgba(59, 66, 97, 0.6);
+  --accent-primary: #00f5a0;
+  --accent-secondary: #00d2ff;
+  --accent-tertiary: #facc15;
+  --accent-purple: #a855f7;
+  --accent-red: #ff4757;
 
-  --scrollbar-track: rgba(0, 0, 0, 0.25);
-  --scrollbar-thumb: rgba(122, 162, 247, 0.3);
-  --scrollbar-hover: rgba(122, 162, 247, 0.6);
+  --border-primary: #1e2e3d;
+  --border-subtle: rgba(0, 245, 160, 0.2);
 
-  --selection-bg: rgba(122, 162, 247, 0.35);
+  --scrollbar-track: rgba(0, 0, 0, 0.35);
+  --scrollbar-thumb: rgba(0, 245, 160, 0.35);
+  --scrollbar-hover: rgba(0, 245, 160, 0.65);
+
+  --selection-bg: rgba(0, 245, 160, 0.3);
   --selection-text: #ffffff;
 }
 
-/* Catppuccin Mocha */
-[data-theme="catppuccin"] {
-  --bg-primary: #1e1e2e;
-  --bg-secondary: #313244;
-  --bg-tertiary: #181825;
-  --bg-surface: #11111b;
-  --bg-hover: rgba(255, 255, 255, 0.08);
-
-  --text-primary: #cdd6f4;
-  --text-secondary: #bac2de;
-  --text-tertiary: #6c7086;
-
-  --accent-primary: #89b4fa;
-  --accent-secondary: #a6e3a1;
-  --accent-tertiary: #f9e2af;
-  --accent-purple: #cba6f7;
-  --accent-red: #f38ba8;
-
-  --border-primary: #45475a;
-  --border-subtle: rgba(69, 71, 90, 0.6);
-
-  --scrollbar-track: rgba(0, 0, 0, 0.25);
-  --scrollbar-thumb: rgba(137, 180, 250, 0.3);
-  --scrollbar-hover: rgba(137, 180, 250, 0.6);
-
-  --selection-bg: rgba(203, 166, 247, 0.35);
-  --selection-text: #ffffff;
-}
-
-/* Dracula */
+/* 2. Synthwave 84 (Vibrant Cyberpunk: Deep Violet & Hot Neon Magenta) */
+[data-theme="synthwave"],
 [data-theme="dracula"] {
-  --bg-primary: #282a36;
-  --bg-secondary: #44475a;
-  --bg-tertiary: #21222c;
-  --bg-surface: #191a21;
-  --bg-hover: rgba(255, 255, 255, 0.08);
+  --font-theme-sans: var(--font-syne), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-theme-mono: var(--font-space-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  --text-primary: #f8f8f2;
-  --text-secondary: #c0c0c0;
-  --text-tertiary: #6272a4;
+  --bg-primary: #120722;
+  --bg-secondary: #210d3d;
+  --bg-tertiary: #2f1354;
+  --bg-surface: #0b0316;
+  --bg-hover: rgba(255, 42, 133, 0.12);
 
-  --accent-primary: #8be9fd;
-  --accent-secondary: #50fa7b;
-  --accent-tertiary: #f1fa8c;
-  --accent-purple: #bd93f9;
-  --accent-red: #ff5555;
+  --text-primary: #fdf2f8;
+  --text-secondary: #d8b4fe;
+  --text-tertiary: #9333ea;
 
-  --border-primary: #6272a4;
-  --border-subtle: rgba(98, 114, 164, 0.5);
+  --accent-primary: #ff2a85;
+  --accent-secondary: #00f0ff;
+  --accent-tertiary: #ffe600;
+  --accent-purple: #c084fc;
+  --accent-red: #ff3366;
 
-  --scrollbar-track: rgba(0, 0, 0, 0.25);
-  --scrollbar-thumb: rgba(139, 233, 253, 0.3);
-  --scrollbar-hover: rgba(139, 233, 253, 0.6);
+  --border-primary: #581c87;
+  --border-subtle: rgba(255, 42, 133, 0.25);
 
-  --selection-bg: rgba(189, 147, 249, 0.35);
+  --scrollbar-track: rgba(0, 0, 0, 0.35);
+  --scrollbar-thumb: rgba(255, 42, 133, 0.35);
+  --scrollbar-hover: rgba(255, 42, 133, 0.65);
+
+  --selection-bg: rgba(255, 42, 133, 0.35);
   --selection-text: #ffffff;
 }
 
-/* Nord */
+/* 3. Sunset Amber (Warm Roasted Espresso & Radiant Honey Gold) */
+[data-theme="sunset-amber"],
+[data-theme="catppuccin"] {
+  --font-theme-sans: var(--font-outfit), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-theme-mono: var(--font-ibm-plex), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --bg-primary: #15110e;
+  --bg-secondary: #231c16;
+  --bg-tertiary: #32261e;
+  --bg-surface: #0d0a08;
+  --bg-hover: rgba(245, 158, 11, 0.1);
+
+  --text-primary: #fef3c7;
+  --text-secondary: #d4a373;
+  --text-tertiary: #786050;
+
+  --accent-primary: #f59e0b;
+  --accent-secondary: #10b981;
+  --accent-tertiary: #f97316;
+  --accent-purple: #d97706;
+  --accent-red: #ef4444;
+
+  --border-primary: #453225;
+  --border-subtle: rgba(245, 158, 11, 0.25);
+
+  --scrollbar-track: rgba(0, 0, 0, 0.35);
+  --scrollbar-thumb: rgba(245, 158, 11, 0.35);
+  --scrollbar-hover: rgba(245, 158, 11, 0.65);
+
+  --selection-bg: rgba(245, 158, 11, 0.35);
+  --selection-text: #ffffff;
+}
+
+/* 4. Nordic Frost (Glacial Ice Cyan & Polar Oceanic Navy) */
+[data-theme="nordic-frost"],
 [data-theme="nord"] {
-  --bg-primary: #2e3440;
-  --bg-secondary: #3b4252;
-  --bg-tertiary: #292e39;
-  --bg-surface: #242933;
-  --bg-hover: rgba(255, 255, 255, 0.08);
+  --font-theme-sans: var(--font-space-grotesk), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-theme-mono: var(--font-fira-code), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  --text-primary: #eceff4;
-  --text-secondary: #d8dee9;
-  --text-tertiary: #4c566a;
+  --bg-primary: #0a1120;
+  --bg-secondary: #122036;
+  --bg-tertiary: #192e4c;
+  --bg-surface: #060b14;
+  --bg-hover: rgba(56, 189, 248, 0.1);
 
-  --accent-primary: #88c0d0;
-  --accent-secondary: #a3be8c;
-  --accent-tertiary: #ebcb8b;
-  --accent-purple: #b48ead;
-  --accent-red: #bf616a;
+  --text-primary: #f0f9ff;
+  --text-secondary: #93c5fd;
+  --text-tertiary: #475569;
 
-  --border-primary: #4c566a;
-  --border-subtle: rgba(76, 86, 106, 0.6);
+  --accent-primary: #38bdf8;
+  --accent-secondary: #2dd4bf;
+  --accent-tertiary: #fbbf24;
+  --accent-purple: #818cf8;
+  --accent-red: #f43f5e;
 
-  --scrollbar-track: rgba(0, 0, 0, 0.25);
-  --scrollbar-thumb: rgba(136, 192, 208, 0.3);
-  --scrollbar-hover: rgba(136, 192, 208, 0.6);
+  --border-primary: #1e3a5f;
+  --border-subtle: rgba(56, 189, 248, 0.22);
 
-  --selection-bg: rgba(136, 192, 208, 0.35);
+  --scrollbar-track: rgba(0, 0, 0, 0.35);
+  --scrollbar-thumb: rgba(56, 189, 248, 0.35);
+  --scrollbar-hover: rgba(56, 189, 248, 0.65);
+
+  --selection-bg: rgba(56, 189, 248, 0.35);
   --selection-text: #ffffff;
 }
 
 body {
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: var(--font-sans);
+  font-family: var(--font-theme-sans);
   overflow-x: hidden;
   user-select: none;
   transition: background-color 0.25s ease, color 0.25s ease;

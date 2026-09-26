@@ -116,10 +116,10 @@ export function MobileLayout() {
               exit={{ opacity: 0, height: 0 }}
               className="bg-[var(--bg-secondary)] border-b border-[var(--border-primary)] px-4 py-3 shadow-2xl"
             >
-              <div className="text-[10px] uppercase tracking-wider text-[var(--text-tertiary)] font-bold mb-2 font-mono">
-                Select Color Theme
+              <div className="text-[10px] uppercase tracking-wider text-[var(--text-tertiary)] font-bold mb-2 font-mono flex items-center justify-between">
+                <span>Theme & Font Pairing</span>
               </div>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {themes.map((t) => {
                   const isActive = t.id === theme;
                   return (
@@ -129,20 +129,36 @@ export function MobileLayout() {
                         setTheme(t.id);
                         setThemePickerOpen(false);
                       }}
-                      className={`p-2 rounded-lg flex items-center justify-between text-left font-mono transition-colors ${
+                      className={`p-2.5 rounded-lg flex items-center justify-between text-left transition-colors ${
                         isActive
                           ? 'bg-[var(--accent-primary)]/15 border border-[var(--accent-primary)]/40 text-white'
                           : 'bg-[var(--bg-tertiary)] hover:bg-[var(--bg-hover)] text-[var(--text-secondary)] border border-[var(--border-subtle)]'
                       }`}
                     >
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="w-3 h-3 rounded-full border border-white/20"
-                          style={{ backgroundColor: t.preview.accent }}
-                        />
-                        <span className="text-xs truncate">{t.name}</span>
+                      <div className="flex items-center gap-2.5">
+                        <div className="flex items-center gap-1 shrink-0">
+                          <div
+                            className="w-3.5 h-3.5 rounded-full border border-white/20"
+                            style={{ backgroundColor: t.preview.bg }}
+                          />
+                          <div
+                            className="w-2.5 h-2.5 rounded-full -ml-2 border border-white/20"
+                            style={{ backgroundColor: t.preview.accent }}
+                          />
+                        </div>
+                        <div>
+                          <div 
+                            className="text-xs font-bold text-white tracking-wide"
+                            style={{ fontFamily: t.fontSansVar }}
+                          >
+                            {t.name}
+                          </div>
+                          <div className="text-[10px] text-[var(--text-tertiary)] font-mono">
+                            {t.label}
+                          </div>
+                        </div>
                       </div>
-                      {isActive && <Check size={12} className="text-[var(--accent-primary)]" />}
+                      {isActive && <Check size={12} className="text-[var(--accent-primary)] shrink-0 ml-1" />}
                     </button>
                   );
                 })}
