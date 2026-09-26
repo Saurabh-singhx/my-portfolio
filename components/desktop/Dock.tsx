@@ -13,11 +13,11 @@ interface DockItemDef {
 }
 
 const dockItems: DockItemDef[] = [
-  { id: 'projects', icon: <FolderOpen size={24} />, label: 'Projects', color: 'text-[#00d2ff]' },
-  { id: 'terminal', icon: <Terminal size={24} />, label: 'Terminal', color: 'text-[#00ff41]' },
-  { id: 'skills', icon: <Braces size={24} />, label: 'Skills', color: 'text-[#ffbd2e]' },
-  { id: 'resume', icon: <FileText size={24} />, label: 'Resume', color: 'text-[#ff5f56]' },
-  { id: 'contact', icon: <Mail size={24} />, label: 'Contact', color: 'text-[#a855f7]' },
+  { id: 'projects', icon: <FolderOpen size={24} />, label: 'Projects', color: 'text-[var(--accent-primary)]' },
+  { id: 'terminal', icon: <Terminal size={24} />, label: 'Terminal', color: 'text-[var(--accent-secondary)]' },
+  { id: 'skills', icon: <Braces size={24} />, label: 'Skills', color: 'text-[var(--accent-tertiary)]' },
+  { id: 'resume', icon: <FileText size={24} />, label: 'Resume', color: 'text-[var(--accent-red)]' },
+  { id: 'contact', icon: <Mail size={24} />, label: 'Contact', color: 'text-[var(--accent-purple)]' },
 ];
 
 export function Dock() {
@@ -38,7 +38,7 @@ export function Dock() {
 
   return (
     <div className="fixed bottom-3 left-1/2 -translate-x-1/2 z-[90]">
-      <div className="flex items-end gap-2 px-3 py-2.5 bg-black/60 backdrop-blur-2xl rounded-2xl border border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.6)]">
+      <div className="flex items-end gap-2 px-3 py-2.5 bg-[var(--bg-surface)]/80 backdrop-blur-2xl rounded-2xl border border-[var(--border-subtle)] shadow-[0_10px_35px_rgba(0,0,0,0.6)] transition-colors duration-200">
         {dockItems.map((item) => {
           const win = windows[item.id];
           const isOpen = win.isOpen;
@@ -87,15 +87,15 @@ function DockIcon({
       <div
         className={`w-12 h-12 flex items-center justify-center rounded-xl transition-all ${colorClass} ${
           isActive
-            ? 'bg-white/15 shadow-[0_0_15px_rgba(0,210,255,0.3)] ring-1 ring-white/20'
-            : 'hover:bg-white/10'
+            ? 'bg-[var(--bg-hover)] shadow-[0_0_15px_rgba(122,162,247,0.35)] ring-1 ring-[var(--accent-primary)]/40'
+            : 'hover:bg-[var(--bg-hover)]'
         }`}
       >
         {icon}
       </div>
 
       {/* Label tooltip */}
-      <div className="absolute -top-9 opacity-0 group-hover:opacity-100 transition-opacity bg-[#161b22] px-2 py-0.5 rounded-md text-[11px] font-mono text-[#e6edf3] whitespace-nowrap pointer-events-none border border-white/10 shadow-lg">
+      <div className="absolute -top-9 opacity-0 group-hover:opacity-100 transition-opacity bg-[var(--bg-secondary)] px-2 py-0.5 rounded-md text-[11px] font-mono text-[var(--text-primary)] whitespace-nowrap pointer-events-none border border-[var(--border-primary)] shadow-lg">
         {label}
       </div>
 
@@ -103,7 +103,7 @@ function DockIcon({
       {isOpen && (
         <div
           className={`absolute -bottom-1 w-1.5 h-1.5 rounded-full transition-all ${
-            isActive ? 'bg-[#00d2ff] scale-125' : 'bg-white/50'
+            isActive ? 'bg-[var(--accent-primary)] scale-125' : 'bg-[var(--text-secondary)]/50'
           }`}
         />
       )}

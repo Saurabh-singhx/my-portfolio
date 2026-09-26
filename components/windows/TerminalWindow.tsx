@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useWindowManager } from '@/context/WindowManagerContext';
+import { useTheme } from '@/context/ThemeContext';
 import { handleCommand } from '@/lib/commands';
 import { Sparkles } from 'lucide-react';
 
@@ -11,7 +12,7 @@ interface TerminalLine {
   content: string;
 }
 
-const suggestedCommands = ['help', 'projects', 'skills', 'experience', 'neofetch', 'resume', 'clear'];
+const suggestedCommands = ['help', 'projects', 'skills', 'experience', 'theme', 'neofetch', 'resume', 'clear'];
 
 export function TerminalWindow() {
   const [lines, setLines] = useState<TerminalLine[]>([
@@ -26,6 +27,7 @@ export function TerminalWindow() {
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { openWindow } = useWindowManager();
+  const { theme, setTheme, themes } = useTheme();
 
   const processCommand = useCallback(
     (cmd: string) => {
@@ -34,6 +36,47 @@ export function TerminalWindow() {
 
       setHistory((prev) => [...prev, trimmed]);
       setHistoryIndex(-1);
+
+      const parts = trimmed.split(' ');
+      const lower = parts[0].toLowerCase();
+      const arg = parts.slice(1).join(' ').toLowerCase().trim();
+
+      // Intercept theme switching in terminal
+      if (lower === 'theme') {
+        if (!arg) {
+          const available = themes.map((t) => `  • ${t.id} (${t.name})`).join('\n');
+          setLines((prev) => [
+            ...prev,
+            { type: 'input', content: `saurabh@SaurabhOS:~$ ${trimmed}` },
+            {
+              type: 'output',
+              content: `Active Theme: ${theme}\nAvailable themes:\n${available}\n\nUsage: theme <name> (e.g. 'theme dracula')`,
+            },
+          ]);
+          return;
+        }
+
+        const match = themes.find((t) => t.id === arg || t.name.toLowerCase() === arg);
+        if (match) {
+          setTheme(match.id);
+          setLines((prev) => [
+            ...prev,
+            { type: 'input', content: `saurabh@SaurabhOS:~$ ${trimmed}` },
+            { type: 'output', content: `Switched theme to ${match.name} (${match.label}).` },
+          ]);
+          return;
+        } else {
+          setLines((prev) => [
+            ...prev,
+            { type: 'input', content: `saurabh@SaurabhOS:~$ ${trimmed}` },
+            {
+              type: 'output',
+              content: `Theme '${arg}' not found. Available: ${themes.map((t) => t.id).join(', ')}`,
+            },
+          ]);
+          return;
+        }
+      }
 
       const result = handleCommand(trimmed);
 
@@ -45,12 +88,12 @@ export function TerminalWindow() {
       if (result.output === '__CLEAR__') {
         setLines([]);
       } else {
-        const lower = trimmed.toLowerCase();
-        if (lower === 'open projects') openWindow('projects');
-        else if (lower === 'open contact') openWindow('contact');
-        else if (lower === 'open resume') openWindow('resume');
-        else if (lower === 'open skills') openWindow('skills');
-        else if (lower === 'open terminal') openWindow('terminal');
+        const cmdLower = trimmed.toLowerCase();
+        if (cmdLower === 'open projects') openWindow('projects');
+        else if (cmdLower === 'open contact') openWindow('contact');
+        else if (cmdLower === 'open resume') openWindow('resume');
+        else if (cmdLower === 'open skills') openWindow('skills');
+        else if (cmdLower === 'open terminal') openWindow('terminal');
 
         setLines((prev) => [
           ...prev,
@@ -58,7 +101,7 @@ export function TerminalWindow() {
         ]);
       }
     },
-    [openWindow]
+    [openWindow, theme, setTheme, themes]
   );
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -108,19 +151,19 @@ export function TerminalWindow() {
 
   return (
     <div
-      className="h-full bg-[#070a0e] p-4 font-mono text-xs md:text-sm flex flex-col select-text"
+      className="h-full bg-[var(--bg-primary)] p-4 font-mono text-xs md:text-sm flex flex-col select-text transition-colors duration-200"
       onClick={() => inputRef.current?.focus()}
     >
       {/* Quick chips */}
-      <div className="flex flex-wrap items-center gap-1.5 pb-3 border-b border-white/[0.08] mb-3 select-none">
-        <span className="text-[#8b949e] text-[11px] flex items-center gap-1 mr-1">
-          <Sparkles size={11} className="text-[#00d2ff]" /> quick:
+      <div className="flex flex-wrap items-center gap-1.5 pb-3 border-b border-[var(--border-subtle)] mb-3 select-none">
+        <span className="text-[var(--text-secondary)] text-[11px] flex items-center gap-1 mr-1">
+          <Sparkles size={11} className="text-[var(--accent-primary)]" /> quick:
         </span>
         {suggestedCommands.map((c) => (
           <button
             key={c}
             onClick={() => processCommand(c)}
-            className="px-2 py-0.5 rounded bg-white/5 hover:bg-[#00d2ff]/20 text-[#8b949e] hover:text-[#00d2ff] border border-white/5 transition-colors text-[11px]"
+            className="px-2 py-0.5 rounded bg-[var(--bg-hover)] hover:bg-[var(--accent-primary)]/20 text-[var(--text-secondary)] hover:text-[var(--accent-primary)] border border-[var(--border-subtle)] transition-colors text-[11px]"
           >
             {c}
           </button>
@@ -137,8 +180,8 @@ export function TerminalWindow() {
             transition={{ duration: 0.1 }}
             className={
               line.type === 'input'
-                ? 'text-[#00ff41] font-bold'
-                : 'text-[#c9d1d9] whitespace-pre-wrap leading-relaxed'
+                ? 'text-[var(--accent-secondary)] font-bold'
+                : 'text-[var(--text-primary)] whitespace-pre-wrap leading-relaxed'
             }
           >
             {line.content}
@@ -147,8 +190,8 @@ export function TerminalWindow() {
       </div>
 
       {/* Input Prompt */}
-      <form onSubmit={handleSubmit} className="flex items-center gap-2 mt-3 pt-2 border-t border-white/[0.06]">
-        <span className="text-[#00ff41] whitespace-nowrap font-bold select-none">
+      <form onSubmit={handleSubmit} className="flex items-center gap-2 mt-3 pt-2 border-t border-[var(--border-subtle)]">
+        <span className="text-[var(--accent-secondary)] whitespace-nowrap font-bold select-none">
           saurabh@SaurabhOS:~$
         </span>
         <input
@@ -157,12 +200,12 @@ export function TerminalWindow() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="flex-1 bg-transparent text-[#e6edf3] outline-none font-mono text-xs md:text-sm"
+          className="flex-1 bg-transparent text-[var(--text-primary)] outline-none font-mono text-xs md:text-sm"
           autoFocus
           spellCheck={false}
           autoComplete="off"
         />
-        <span className="w-2 h-4 bg-[#00ff41] animate-pulse" />
+        <span className="w-2 h-4 bg-[var(--accent-secondary)] animate-pulse" />
       </form>
     </div>
   );

@@ -19,17 +19,17 @@ export function ProjectsWindow() {
   const [activeTab, setActiveTab] = useState<'overview' | 'architecture' | 'metrics'>('overview');
 
   return (
-    <div className="h-full flex flex-col md:flex-row bg-[#0e131b] select-text">
+    <div className="h-full flex flex-col md:flex-row bg-[var(--bg-primary)] select-text transition-colors duration-200">
       {/* Sidebar */}
-      <div className="w-full md:w-[230px] bg-[#141a24] border-r border-white/[0.08] flex-shrink-0 flex flex-col">
-        <div className="p-3 border-b border-white/[0.06] text-xs font-mono text-[#8b949e] flex items-center justify-between">
+      <div className="w-full md:w-[230px] bg-[var(--bg-secondary)] border-r border-[var(--border-subtle)] flex-shrink-0 flex flex-col">
+        <div className="p-3 border-b border-[var(--border-subtle)] text-xs font-mono text-[var(--text-secondary)] flex items-center justify-between">
           <span>PROJECTS ({projects.length})</span>
-          <span className="text-[10px] bg-[#00d2ff]/10 text-[#00d2ff] px-1.5 py-0.5 rounded">
+          <span className="text-[10px] bg-[var(--accent-primary)]/15 text-[var(--accent-primary)] px-1.5 py-0.5 rounded border border-[var(--accent-primary)]/20">
             Updated 2026
           </span>
         </div>
 
-        <div className="overflow-y-auto flex-1 divide-y divide-white/[0.04]">
+        <div className="overflow-y-auto flex-1 divide-y divide-[var(--border-subtle)]/40">
           {projects.map((project) => {
             const isSelected = selectedProject.id === project.id;
             return (
@@ -41,8 +41,8 @@ export function ProjectsWindow() {
                 }}
                 className={`w-full flex items-start gap-3 p-3 text-left transition-all ${
                   isSelected
-                    ? 'bg-[#00d2ff]/10 border-l-2 border-[#00d2ff]'
-                    : 'hover:bg-white/[0.04]'
+                    ? 'bg-[var(--accent-primary)]/15 border-l-2 border-[var(--accent-primary)]'
+                    : 'hover:bg-[var(--bg-hover)]'
                 }`}
               >
                 <div
@@ -56,20 +56,20 @@ export function ProjectsWindow() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-1">
-                    <span className="text-xs font-mono font-medium text-[#e6edf3] truncate">
+                    <span className="text-xs font-mono font-medium text-[var(--text-primary)] truncate">
                       {project.name}
                     </span>
                     <span
                       className={`text-[9px] px-1 rounded font-mono ${
                         project.status === 'Live'
-                          ? 'bg-emerald-500/20 text-emerald-400'
-                          : 'bg-cyan-500/20 text-cyan-400'
+                          ? 'bg-[var(--accent-secondary)]/20 text-[var(--accent-secondary)]'
+                          : 'bg-[var(--accent-primary)]/20 text-[var(--accent-primary)]'
                       }`}
                     >
                       {project.status}
                     </span>
                   </div>
-                  <p className="text-[11px] text-[#8b949e] truncate mt-0.5 font-mono">
+                  <p className="text-[11px] text-[var(--text-secondary)] truncate mt-0.5 font-mono">
                     {project.type}
                   </p>
                 </div>
@@ -80,7 +80,7 @@ export function ProjectsWindow() {
       </div>
 
       {/* Main Details Pane */}
-      <div className="flex-1 p-6 overflow-y-auto flex flex-col bg-[#0b0e14]">
+      <div className="flex-1 p-6 overflow-y-auto flex flex-col bg-[var(--bg-primary)]">
         <motion.div
           key={selectedProject.id}
           initial={{ opacity: 0, y: 8 }}
@@ -89,11 +89,11 @@ export function ProjectsWindow() {
           className="space-y-5"
         >
           {/* Header */}
-          <div className="border-b border-white/[0.08] pb-4">
+          <div className="border-b border-[var(--border-subtle)] pb-4">
             <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
               <div className="flex items-center gap-3">
                 <div
-                  className="p-2.5 rounded-lg border border-white/10"
+                  className="p-2.5 rounded-lg border border-[var(--border-subtle)]"
                   style={{
                     backgroundColor: `${selectedProject.iconColor}15`,
                     color: selectedProject.iconColor,
@@ -102,10 +102,10 @@ export function ProjectsWindow() {
                   {iconMap[selectedProject.icon]}
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold font-mono text-white flex items-center gap-2">
+                  <h2 className="text-xl font-bold font-mono text-[var(--text-primary)] flex items-center gap-2">
                     {selectedProject.name}
                   </h2>
-                  <p className="text-xs text-[#00d2ff] font-mono">{selectedProject.subtitle}</p>
+                  <p className="text-xs text-[var(--accent-primary)] font-mono">{selectedProject.subtitle}</p>
                 </div>
               </div>
 
@@ -116,7 +116,7 @@ export function ProjectsWindow() {
                     href={selectedProject.liveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#00d2ff]/10 hover:bg-[#00d2ff]/20 text-[#00d2ff] border border-[#00d2ff]/30 text-xs font-mono transition-all hover:scale-[1.02]"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--accent-primary)]/15 hover:bg-[var(--accent-primary)]/25 text-[var(--accent-primary)] border border-[var(--accent-primary)]/40 text-xs font-mono transition-all hover:scale-[1.02]"
                   >
                     <ExternalLink size={13} />
                     <span>Live Demo</span>
@@ -127,7 +127,7 @@ export function ProjectsWindow() {
                     href={selectedProject.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-[#e6edf3] border border-white/15 text-xs font-mono transition-all hover:scale-[1.02]"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--bg-hover)] hover:bg-[var(--bg-hover)]/80 text-[var(--text-primary)] border border-[var(--border-primary)] text-xs font-mono transition-all hover:scale-[1.02]"
                   >
                     <FaGithub size={13} />
                     <span>Source Code</span>
@@ -142,8 +142,8 @@ export function ProjectsWindow() {
                 onClick={() => setActiveTab('overview')}
                 className={`pb-1 border-b-2 transition-colors flex items-center gap-1.5 ${
                   activeTab === 'overview'
-                    ? 'border-[#00d2ff] text-[#00d2ff]'
-                    : 'border-transparent text-[#8b949e] hover:text-[#e6edf3]'
+                    ? 'border-[var(--accent-primary)] text-[var(--accent-primary)]'
+                    : 'border-transparent text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                 }`}
               >
                 <CheckCircle2 size={13} /> Overview & Highlights
@@ -153,8 +153,8 @@ export function ProjectsWindow() {
                   onClick={() => setActiveTab('architecture')}
                   className={`pb-1 border-b-2 transition-colors flex items-center gap-1.5 ${
                     activeTab === 'architecture'
-                      ? 'border-[#00d2ff] text-[#00d2ff]'
-                      : 'border-transparent text-[#8b949e] hover:text-[#e6edf3]'
+                      ? 'border-[var(--accent-primary)] text-[var(--accent-primary)]'
+                      : 'border-transparent text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                   }`}
                 >
                   <Cpu size={13} /> System Architecture
@@ -165,8 +165,8 @@ export function ProjectsWindow() {
                   onClick={() => setActiveTab('metrics')}
                   className={`pb-1 border-b-2 transition-colors flex items-center gap-1.5 ${
                     activeTab === 'metrics'
-                      ? 'border-[#00d2ff] text-[#00d2ff]'
-                      : 'border-transparent text-[#8b949e] hover:text-[#e6edf3]'
+                      ? 'border-[var(--accent-primary)] text-[var(--accent-primary)]'
+                      : 'border-transparent text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                   }`}
                 >
                   <Activity size={13} /> Performance & Metrics
@@ -176,13 +176,13 @@ export function ProjectsWindow() {
           </div>
 
           {/* Description */}
-          <p className="text-sm text-[#c9d1d9] leading-relaxed">
+          <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
             {selectedProject.description}
           </p>
 
           {/* Tech Badges */}
           <div>
-            <div className="text-xs font-mono text-[#8b949e] mb-2 uppercase tracking-wider">
+            <div className="text-xs font-mono text-[var(--text-secondary)] mb-2 uppercase tracking-wider">
               Tech Stack & Infrastructure
             </div>
             <div className="flex flex-wrap gap-1.5">
@@ -190,7 +190,7 @@ export function ProjectsWindow() {
                 <span
                   key={tech}
                   className={`text-xs px-2.5 py-1 rounded-md border font-mono ${
-                    techColors[tech] || 'bg-white/5 text-[#8b949e] border-white/10'
+                    techColors[tech] || 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)] border-[var(--border-subtle)]'
                   }`}
                 >
                   {tech}
@@ -201,14 +201,14 @@ export function ProjectsWindow() {
 
           {/* Tab Content */}
           {activeTab === 'overview' && (
-            <div className="space-y-3 bg-[#141a24]/60 p-4 rounded-xl border border-white/[0.06]">
-              <div className="text-xs font-mono text-[#00d2ff] uppercase tracking-wider mb-1 flex items-center gap-2">
+            <div className="space-y-3 bg-[var(--bg-secondary)]/60 p-4 rounded-xl border border-[var(--border-subtle)]">
+              <div className="text-xs font-mono text-[var(--accent-primary)] uppercase tracking-wider mb-1 flex items-center gap-2">
                 <span>Key Deliverables & Engineering Accomplishments</span>
               </div>
               <div className="space-y-2.5">
                 {selectedProject.highlights.map((highlight, i) => (
-                  <div key={i} className="flex items-start gap-2.5 text-xs md:text-sm text-[#e6edf3]">
-                    <span className="text-[#00ff41] font-mono mt-0.5">❯</span>
+                  <div key={i} className="flex items-start gap-2.5 text-xs md:text-sm text-[var(--text-primary)]">
+                    <span className="text-[var(--accent-secondary)] font-mono mt-0.5">❯</span>
                     <span className="leading-relaxed">{highlight}</span>
                   </div>
                 ))}
@@ -217,15 +217,15 @@ export function ProjectsWindow() {
           )}
 
           {activeTab === 'architecture' && selectedProject.architecture && (
-            <div className="space-y-3 bg-[#141a24]/60 p-4 rounded-xl border border-white/[0.06]">
-              <div className="text-xs font-mono text-[#00d2ff] uppercase tracking-wider mb-1">
+            <div className="space-y-3 bg-[var(--bg-secondary)]/60 p-4 rounded-xl border border-[var(--border-subtle)]">
+              <div className="text-xs font-mono text-[var(--accent-primary)] uppercase tracking-wider mb-1">
                 Architecture Breakdown
               </div>
               <div className="space-y-2">
                 {selectedProject.architecture.map((item, i) => (
                   <div
                     key={i}
-                    className="p-2.5 rounded-lg bg-[#0d1117] border border-white/5 font-mono text-xs text-[#c9d1d9]"
+                    className="p-2.5 rounded-lg bg-[var(--bg-tertiary)] border border-[var(--border-subtle)] font-mono text-xs text-[var(--text-secondary)]"
                   >
                     {item}
                   </div>
@@ -235,17 +235,17 @@ export function ProjectsWindow() {
           )}
 
           {activeTab === 'metrics' && selectedProject.metrics && (
-            <div className="space-y-3 bg-[#141a24]/60 p-4 rounded-xl border border-white/[0.06]">
-              <div className="text-xs font-mono text-[#00ff41] uppercase tracking-wider mb-1">
+            <div className="space-y-3 bg-[var(--bg-secondary)]/60 p-4 rounded-xl border border-[var(--border-subtle)]">
+              <div className="text-xs font-mono text-[var(--accent-secondary)] uppercase tracking-wider mb-1">
                 Load Testing & Production Metrics
               </div>
               <div className="grid grid-cols-1 gap-2.5">
                 {selectedProject.metrics.map((metric, i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-2 p-3 rounded-lg bg-[#0d1117] border border-emerald-500/20 text-xs font-mono text-emerald-300"
+                    className="flex items-center gap-2 p-3 rounded-lg bg-[var(--bg-tertiary)] border border-[var(--accent-secondary)]/30 text-xs font-mono text-[var(--accent-secondary)]"
                   >
-                    <Activity size={14} className="text-[#00ff41] flex-shrink-0" />
+                    <Activity size={14} className="text-[var(--accent-secondary)] flex-shrink-0" />
                     <span>{metric}</span>
                   </div>
                 ))}

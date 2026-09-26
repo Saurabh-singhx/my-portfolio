@@ -20,6 +20,7 @@ export function handleCommand(cmd: string): CommandResult {
   certifications    - View honors and hackathon certificates
   achievements      - View technical milestones
   contact           - Display email, phone, and social links
+  theme [name]      - View or switch color theme (tokyo-night, catppuccin, dracula, nord)
   open <app>        - Open a desktop window (projects, skills, contact, resume)
   cat resume.pdf    - Output full resume text to terminal
   neofetch          - Show SaurabhOS system specification
@@ -186,6 +187,13 @@ Run 'open resume' to view the PDF or download it.`,
     case 'linkedin':
       return {
         output: 'https://www.linkedin.com/in/saurabh-kumar0/',
+      };
+
+    case 'theme':
+      return {
+        output: subArg
+          ? `Switched theme to ${subArg}.`
+          : `Usage: theme <name>\nAvailable themes: tokyo-night, catppuccin, dracula, nord`,
       };
 
     case 'echo':

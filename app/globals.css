@@ -1,23 +1,156 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --color-background: var(--bg-primary);
+  --color-foreground: var(--text-primary);
+  
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-tertiary: var(--bg-tertiary);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-hover: var(--bg-hover);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-accent-tertiary: var(--accent-tertiary);
+  --color-accent-purple: var(--accent-purple);
+  --color-accent-red: var(--accent-red);
+
+  --color-border-primary: var(--border-primary);
+  --color-border-subtle: var(--border-subtle);
+
+  --font-sans: var(--font-space-grotesk), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-:root {
-  --background: #090d14;
-  --foreground: #e6edf3;
+/* Default / Tokyo Night (Primary Theme) */
+:root,
+[data-theme="tokyo-night"] {
+  --bg-primary: #1a1b26;
+  --bg-secondary: #24283b;
+  --bg-tertiary: #1f2335;
+  --bg-surface: #16161e;
+  --bg-hover: rgba(255, 255, 255, 0.08);
+
+  --text-primary: #c0caf5;
+  --text-secondary: #a9b1d6;
+  --text-tertiary: #565f89;
+
+  --accent-primary: #7aa2f7;
+  --accent-secondary: #9ece6a;
+  --accent-tertiary: #e0af68;
+  --accent-purple: #bb9af7;
+  --accent-red: #f7768e;
+
+  --border-primary: #3b4261;
+  --border-subtle: rgba(59, 66, 97, 0.6);
+
+  --scrollbar-track: rgba(0, 0, 0, 0.25);
+  --scrollbar-thumb: rgba(122, 162, 247, 0.3);
+  --scrollbar-hover: rgba(122, 162, 247, 0.6);
+
+  --selection-bg: rgba(122, 162, 247, 0.35);
+  --selection-text: #ffffff;
+}
+
+/* Catppuccin Mocha */
+[data-theme="catppuccin"] {
+  --bg-primary: #1e1e2e;
+  --bg-secondary: #313244;
+  --bg-tertiary: #181825;
+  --bg-surface: #11111b;
+  --bg-hover: rgba(255, 255, 255, 0.08);
+
+  --text-primary: #cdd6f4;
+  --text-secondary: #bac2de;
+  --text-tertiary: #6c7086;
+
+  --accent-primary: #89b4fa;
+  --accent-secondary: #a6e3a1;
+  --accent-tertiary: #f9e2af;
+  --accent-purple: #cba6f7;
+  --accent-red: #f38ba8;
+
+  --border-primary: #45475a;
+  --border-subtle: rgba(69, 71, 90, 0.6);
+
+  --scrollbar-track: rgba(0, 0, 0, 0.25);
+  --scrollbar-thumb: rgba(137, 180, 250, 0.3);
+  --scrollbar-hover: rgba(137, 180, 250, 0.6);
+
+  --selection-bg: rgba(203, 166, 247, 0.35);
+  --selection-text: #ffffff;
+}
+
+/* Dracula */
+[data-theme="dracula"] {
+  --bg-primary: #282a36;
+  --bg-secondary: #44475a;
+  --bg-tertiary: #21222c;
+  --bg-surface: #191a21;
+  --bg-hover: rgba(255, 255, 255, 0.08);
+
+  --text-primary: #f8f8f2;
+  --text-secondary: #c0c0c0;
+  --text-tertiary: #6272a4;
+
+  --accent-primary: #8be9fd;
+  --accent-secondary: #50fa7b;
+  --accent-tertiary: #f1fa8c;
+  --accent-purple: #bd93f9;
+  --accent-red: #ff5555;
+
+  --border-primary: #6272a4;
+  --border-subtle: rgba(98, 114, 164, 0.5);
+
+  --scrollbar-track: rgba(0, 0, 0, 0.25);
+  --scrollbar-thumb: rgba(139, 233, 253, 0.3);
+  --scrollbar-hover: rgba(139, 233, 253, 0.6);
+
+  --selection-bg: rgba(189, 147, 249, 0.35);
+  --selection-text: #ffffff;
+}
+
+/* Nord */
+[data-theme="nord"] {
+  --bg-primary: #2e3440;
+  --bg-secondary: #3b4252;
+  --bg-tertiary: #292e39;
+  --bg-surface: #242933;
+  --bg-hover: rgba(255, 255, 255, 0.08);
+
+  --text-primary: #eceff4;
+  --text-secondary: #d8dee9;
+  --text-tertiary: #4c566a;
+
+  --accent-primary: #88c0d0;
+  --accent-secondary: #a3be8c;
+  --accent-tertiary: #ebcb8b;
+  --accent-purple: #b48ead;
+  --accent-red: #bf616a;
+
+  --border-primary: #4c566a;
+  --border-subtle: rgba(76, 86, 106, 0.6);
+
+  --scrollbar-track: rgba(0, 0, 0, 0.25);
+  --scrollbar-thumb: rgba(136, 192, 208, 0.3);
+  --scrollbar-hover: rgba(136, 192, 208, 0.6);
+
+  --selection-bg: rgba(136, 192, 208, 0.35);
+  --selection-text: #ffffff;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg-primary);
+  color: var(--text-primary);
   font-family: var(--font-sans);
   overflow-x: hidden;
   user-select: none;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 /* Custom Sleek Scrollbars */
@@ -27,20 +160,21 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--scrollbar-track);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--scrollbar-thumb);
   border-radius: 9999px;
+  transition: background-color 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 210, 255, 0.4);
+  background: var(--scrollbar-hover);
 }
 
 /* Selection */
 ::selection {
-  background: rgba(0, 210, 255, 0.35);
-  color: #ffffff;
+  background: var(--selection-bg);
+  color: var(--selection-text);
 }

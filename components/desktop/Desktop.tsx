@@ -31,37 +31,37 @@ const shortcuts: DesktopShortcut[] = [
   {
     id: 'projects',
     label: 'Projects',
-    icon: <Folder className="w-6 h-6 text-[#00d2ff]" />,
-    color: 'border-[#00d2ff]/30 bg-[#00d2ff]/10',
+    icon: <Folder className="w-6 h-6 text-[var(--accent-primary)]" />,
+    color: 'border-[var(--accent-primary)]/40 bg-[var(--accent-primary)]/10',
     windowId: 'projects',
   },
   {
     id: 'terminal',
     label: 'Terminal',
-    icon: <Terminal className="w-6 h-6 text-[#00ff41]" />,
-    color: 'border-[#00ff41]/30 bg-[#00ff41]/10',
+    icon: <Terminal className="w-6 h-6 text-[var(--accent-secondary)]" />,
+    color: 'border-[var(--accent-secondary)]/40 bg-[var(--accent-secondary)]/10',
     windowId: 'terminal',
   },
   {
     id: 'skills',
     label: 'Skills.json',
-    icon: <Braces className="w-6 h-6 text-[#ffbd2e]" />,
-    color: 'border-[#ffbd2e]/30 bg-[#ffbd2e]/10',
+    icon: <Braces className="w-6 h-6 text-[var(--accent-tertiary)]" />,
+    color: 'border-[var(--accent-tertiary)]/40 bg-[var(--accent-tertiary)]/10',
     windowId: 'skills',
   },
   {
     id: 'resume',
     label: 'resume.pdf',
-    icon: <FileText className="w-6 h-6 text-[#ff5f56]" />,
+    icon: <FileText className="w-6 h-6 text-[var(--accent-red)]" />,
     badge: 'PDF',
-    color: 'border-[#ff5f56]/30 bg-[#ff5f56]/10',
+    color: 'border-[var(--accent-red)]/40 bg-[var(--accent-red)]/10',
     windowId: 'resume',
   },
   {
     id: 'contact',
     label: 'Contact.sh',
-    icon: <Mail className="w-6 h-6 text-[#a855f7]" />,
-    color: 'border-[#a855f7]/30 bg-[#a855f7]/10',
+    icon: <Mail className="w-6 h-6 text-[var(--accent-purple)]" />,
+    color: 'border-[var(--accent-purple)]/40 bg-[var(--accent-purple)]/10',
     windowId: 'contact',
   },
   {
@@ -75,8 +75,8 @@ const shortcuts: DesktopShortcut[] = [
   {
     id: 'github',
     label: 'GitHub',
-    icon: <FaGithub className="w-6 h-6 text-[#e6edf3]" />,
-    color: 'border-white/20 bg-white/10',
+    icon: <FaGithub className="w-6 h-6 text-[var(--text-primary)]" />,
+    color: 'border-[var(--border-primary)] bg-[var(--bg-secondary)]/80',
     href: resumeData.github,
     isExternal: true,
   },
@@ -89,7 +89,7 @@ export function Desktop() {
   return (
     <div
       id="desktop-root"
-      className="fixed inset-0 bg-[#070a0e] overflow-hidden select-none"
+      className="fixed inset-0 bg-[var(--bg-primary)] overflow-hidden select-none transition-colors duration-250"
       onClick={() => setSelectedId(null)}
     >
       <ParticlesBackground />
@@ -108,17 +108,17 @@ export function Desktop() {
               >
                 {shortcut.icon}
                 {shortcut.badge && (
-                  <span className="absolute -top-1 -right-1 text-[8px] font-bold bg-[#ff5f56] text-white px-1 rounded">
+                  <span className="absolute -top-1 -right-1 text-[8px] font-bold bg-[var(--accent-red)] text-white px-1 rounded shadow">
                     {shortcut.badge}
                   </span>
                 )}
                 {shortcut.isExternal && (
-                  <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-[#161b22] border border-white/20 flex items-center justify-center text-[#e6edf3] shadow-sm">
+                  <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-[var(--bg-secondary)] border border-[var(--border-subtle)] flex items-center justify-center text-[var(--text-primary)] shadow-sm">
                     <ArrowUpRight size={9} strokeWidth={2.5} />
                   </div>
                 )}
               </div>
-              <span className="text-[11px] text-[#e6edf3] font-mono px-1.5 py-0.5 rounded leading-tight text-center drop-shadow truncate max-w-full">
+              <span className="text-[11px] text-[var(--text-primary)] font-mono px-1.5 py-0.5 rounded leading-tight text-center drop-shadow truncate max-w-full">
                 {shortcut.label}
               </span>
             </>
@@ -137,8 +137,8 @@ export function Desktop() {
                 }}
                 className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition-all group cursor-pointer ${
                   isSelected
-                    ? 'bg-white/15 ring-1 ring-[#00d2ff]'
-                    : 'hover:bg-white/10'
+                    ? 'bg-[var(--bg-hover)] ring-1 ring-[var(--accent-primary)]'
+                    : 'hover:bg-[var(--bg-hover)]'
                 }`}
                 title={`Open ${shortcut.label}`}
               >
@@ -159,8 +159,8 @@ export function Desktop() {
               }}
               className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition-all group ${
                 isSelected
-                  ? 'bg-white/15 ring-1 ring-[#00d2ff]'
-                  : 'hover:bg-white/10'
+                  ? 'bg-[var(--bg-hover)] ring-1 ring-[var(--accent-primary)]'
+                  : 'hover:bg-[var(--bg-hover)]'
               }`}
               title={shortcut.label}
             >

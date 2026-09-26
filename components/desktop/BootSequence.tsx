@@ -83,19 +83,19 @@ export function BootSequence({ onComplete, onSkip }: BootSequenceProps) {
   return (
     <motion.div
       ref={containerRef}
-      className="fixed inset-0 bg-[#070a0e] z-50 flex flex-col items-center justify-center font-mono text-[#00ff41] p-6 select-none"
+      className="fixed inset-0 bg-[var(--bg-primary)] z-50 flex flex-col items-center justify-center font-mono text-[var(--accent-secondary)] p-6 select-none transition-colors duration-250"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="w-full max-w-2xl bg-[#0b0e14]/80 border border-white/10 rounded-2xl p-6 shadow-2xl backdrop-blur-xl">
-        <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-4 text-xs text-[#8b949e]">
+      <div className="w-full max-w-2xl bg-[var(--bg-secondary)]/85 border border-[var(--border-primary)] rounded-2xl p-6 shadow-2xl backdrop-blur-xl">
+        <div className="flex items-center justify-between pb-3 border-b border-[var(--border-subtle)] mb-4 text-xs text-[var(--text-secondary)]">
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#00ff41] animate-ping" />
+            <span className="w-2 h-2 rounded-full bg-[var(--accent-secondary)] animate-ping" />
             SaurabhOS BIOS POST 2026
           </span>
-          <span className="text-[11px]">Press ESC or SPACE to skip</span>
+          <span className="text-[11px] text-[var(--text-tertiary)]">Press ESC or SPACE to skip</span>
         </div>
 
         <div className="min-h-[280px] space-y-1">
@@ -112,7 +112,7 @@ export function BootSequence({ onComplete, onSkip }: BootSequenceProps) {
 
           {visibleLines < bootLines.length && (
             <span
-              className={`inline-block w-2.5 h-4 bg-[#00ff41] ml-1 ${
+              className={`inline-block w-2.5 h-4 bg-[var(--accent-secondary)] ml-1 ${
                 showCursor ? 'opacity-100' : 'opacity-0'
               }`}
             />
@@ -122,15 +122,15 @@ export function BootSequence({ onComplete, onSkip }: BootSequenceProps) {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="mt-6 pt-3 border-t border-white/10"
+              className="mt-6 pt-3 border-t border-[var(--border-subtle)]"
             >
               <div className="flex items-center justify-between text-xs mb-1.5">
-                <span className="text-[#8b949e]">Loading Graphical Desktop Manager</span>
-                <span className="text-[#00d2ff] font-bold">{progress}%</span>
+                <span className="text-[var(--text-secondary)]">Loading Graphical Desktop Manager</span>
+                <span className="text-[var(--accent-primary)] font-bold">{progress}%</span>
               </div>
-              <div className="w-full h-2 bg-[#1c2333] rounded-full overflow-hidden border border-white/10">
+              <div className="w-full h-2 bg-[var(--bg-tertiary)] rounded-full overflow-hidden border border-[var(--border-subtle)]">
                 <motion.div
-                  className="h-full bg-gradient-to-r from-[#00d2ff] to-[#00ff41]"
+                  className="h-full bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-secondary)]"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -144,10 +144,10 @@ export function BootSequence({ onComplete, onSkip }: BootSequenceProps) {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
         onClick={onSkip}
-        className="mt-6 px-4 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[#8b949e] hover:text-white text-xs font-mono transition-all flex items-center gap-2"
+        className="mt-6 px-4 py-1.5 rounded-lg bg-[var(--bg-hover)] hover:bg-[var(--bg-hover)]/80 border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white text-xs font-mono transition-all flex items-center gap-2"
       >
         <span>Skip boot sequence</span>
-        <span className="text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-white">ESC</span>
+        <span className="text-[10px] bg-[var(--bg-tertiary)] border border-[var(--border-subtle)] px-1.5 py-0.5 rounded text-white">ESC</span>
       </motion.button>
     </motion.div>
   );

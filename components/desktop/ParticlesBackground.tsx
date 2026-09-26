@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { useTheme } from '@/context/ThemeContext';
 
 interface Particle {
   x: number;
@@ -13,6 +14,7 @@ interface Particle {
 
 export function ParticlesBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -34,7 +36,14 @@ export function ParticlesBackground() {
       radius: 160,
     };
 
-    const colors = ['#00d2ff', '#00ff41', '#38bdf8', '#818cf8'];
+    // Extract dynamic theme accent colors
+    const computed = getComputedStyle(document.documentElement);
+    const accentPrimary = computed.getPropertyValue('--accent-primary').trim() || '#7aa2f7';
+    const accentSecondary = computed.getPropertyValue('--accent-secondary').trim() || '#9ece6a';
+    const accentTertiary = computed.getPropertyValue('--accent-tertiary').trim() || '#e0af68';
+    const accentPurple = computed.getPropertyValue('--accent-purple').trim() || '#bb9af7';
+
+    const colors = [accentPrimary, accentSecondary, accentTertiary, accentPurple];
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
@@ -107,7 +116,7 @@ export function ParticlesBackground() {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = '#00d2ff';
+            ctx.strokeStyle = accentPrimary;
             ctx.globalAlpha = (1 - dist / maxDistance) * 0.12;
             ctx.lineWidth = 0.8;
             ctx.stroke();
@@ -122,7 +131,7 @@ export function ParticlesBackground() {
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(mouse.x, mouse.y);
-          ctx.strokeStyle = '#00ff41';
+          ctx.strokeStyle = accentSecondary;
           ctx.globalAlpha = (1 - mDist / mouse.radius) * 0.25;
           ctx.lineWidth = 1;
           ctx.stroke();
@@ -141,7 +150,7 @@ export function ParticlesBackground() {
       document.removeEventListener('mouseleave', handleMouseLeave);
       cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [theme]);
 
   return (
     <canvas
