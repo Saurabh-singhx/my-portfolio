@@ -80,6 +80,14 @@ export interface ResumeEducation {
   grade?: string;
 }
 
+export interface SocialLink {
+  id: string;
+  name: string;
+  label: string;
+  url: string;
+  type?: 'social' | 'contact';
+}
+
 export interface ResumeData {
   name: string;
   title: string;

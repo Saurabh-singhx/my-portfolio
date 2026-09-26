@@ -1,4 +1,4 @@
-import { ResumeData } from './types';
+import { ResumeData, SocialLink } from './types';
 
 export const resumeData: ResumeData = {
   name: 'Saurabh Kumar',
@@ -92,3 +92,28 @@ export const resumeData: ResumeData = {
     'Load-tested Sonix Music API to 200-500 concurrent users on a single AWS EC2 t3.micro using k6.',
   ],
 };
+
+export const socialLinks: SocialLink[] = [
+  {
+    id: 'linkedin',
+    name: 'LinkedIn',
+    label: 'LinkedIn',
+    url: resumeData.linkedin,
+    type: 'social',
+  },
+  {
+    id: 'github',
+    name: 'GitHub',
+    label: 'GitHub',
+    url: resumeData.github,
+    type: 'social',
+  },
+  {
+    id: 'mail',
+    name: 'Mail',
+    label: 'Mail',
+    url: `mailto:${resumeData.email}`,
+    type: 'contact',
+  },
+];
+
